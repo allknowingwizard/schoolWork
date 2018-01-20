@@ -144,7 +144,8 @@ int readInputData(int partNumbers[], float partCosts[], int partQuantities[]) {
     //if the file doesn't open, call an error and exit
     if(!inFile.is_open()) {
         cout << "Failed to open \"parts.txt\"! Closing...";
-        exit(0);
+        //exit(0);
+	return 0;
     }
     int size = 0;
     //read in all of the data available and store it in the parallel arrays
