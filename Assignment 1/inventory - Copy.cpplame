@@ -12,7 +12,6 @@ void swap(int[], int, int);
 void bubbleSort(int[], float[], int[], int);
 void listPartsData(int[], float[], int[], int);
 int binarySearch(int[], int, int, int);
-int multipleLinearSearch(int[], int[], int, int);
 
 const int MAX_DATA_SIZE = 100;
 
@@ -29,95 +28,58 @@ int main()
     // sort data
     bubbleSort(partNumbers, partCosts, partQuantities, size);
 
-    // defaults to linear searches
-    string searchType = "linear";
+    // list out sorted data
+    listPartsData(partNumbers, partCosts, partQuantities, size);
     
     //error callback
+    string searchType = "linear";
     loopStart:
         int query;
         int optionQuery;
         do {
-            //prints the option menu
-            cout << "Options: \n" << left << "     " << "1) Search (" << searchType << ")\n";
-            cout << "     " << "2) Linear Search (Multiple Results)\n" << "     " << "3) Binary Search (Single Result)\n";
-            cout << "     " << "4) Exit\n\n";
-
+            cout << "Options: \n" << right << setw(20) << "1) Search " << searchType << ")\n";
+            cout << setw(20) << "2) Linear Search (Multiple Results)\n" << setw(20) << "3) Binary Search (Single Result)\n";
+            cout << setw(20) << "4) Exit\n";
             //ask user for query
-            cout << "Select An Option Above: ";
+            cout << "\n\nSelect An Option Above: ";
             cin >> optionQuery;
-            //switch cases the various menu items
             switch(optionQuery) {
                 //exit when the escape value is given
-                case 1: // Search using the current searchType
-                    //list part data
-                    listPartsData(partNumbers, partCosts, partQuantities, size);
-                    // search error callback
-                    searchStart:
-                    do {
-                        //ask user for search query
-                        cout << "Please Enter Search Query (-1 to return to options): ";
-                        cin >> query;
-                        //if escape value, return to menu
-                        if(query == -1)
-                            break;
-                        //throw an error if the query is negative and return to search callback
-                        if(query < 0) {
-                            cout << "Query entered is invalid. Negatives not allowed.\n";
-                            goto searchStart;
+                case 1:
+                    if(query == -1)
+                        break;
+                    //throw an error if the query is negative
+                    if(query < 0) {
+                        cout << "Query entered is invalid. Negatives not allowed.\n";
+                        goto loopStart;
+                    } else {
+                        //search partNumbers for query
+                        int queryIndex = binarySearch(partNumbers, 0, size, query);
+                        //if nothing is found, inform the user and restart the loop
+                        if(queryIndex == -1) {
+                            cout << "NO MATCHING RESULTS\n";
+                            goto loopStart;
                         } else {
-                            if(searchType == "binary") { // binary search
-                                //search partNumbers for query
-                                int queryIndex = binarySearch(partNumbers, 0, size, query);
-                                //if nothing is found, inform the user and restart the loop
-                                if(queryIndex == -1) { // -1 is only returned if no results were found
-                                    cout << "NO MATCHING RESULTS\n";
-                                    goto searchStart; //restart search loop
-                                } else {
-                                    //if something is found display it on screen
-                                    cout << "FOUND RESULT\n";
+                            //if something is found display it on screen
+                            cout << "FOUND RESULT\n";
 
-                                    //create parallel arrays of only one item to reuse preexisting listPartsData function
-                                    //otherwise you could reprint the column names and then call displayItemData();
-                                    int a[1] = {partNumbers[queryIndex]};
-                                    float b[1] = {partCosts[queryIndex]};
-                                    int c[1] = {partQuantities[queryIndex]};
-                                    listPartsData(a, b, c, 1);
-                                }
-                            } else { // linear Search
-                                int queryIndexes[MAX_DATA_SIZE];
-                                int resultSize = multipleLinearSearch(partNumbers, queryIndexes, query, size);
-                                //if there are no results inform the user and restart the search loop
-                                if(resultSize == 0) {
-                                    cout << "NO RESULTS FOUND\n";
-                                    goto searchStart; // restart the search loop
-                                } else if (resultSize > 0) { // there is at least one result
-                                    cout << "FOUND " << resultSize << " RESULTS\n"; // inform the user
-                                    //initialize parallel result arrays
-                                    int a[resultSize];
-                                    float b[resultSize];
-                                    int c[resultSize];
-                                    // fill parallel result arrays using the result indexes from multipleLinearSearch();
-                                    for (int i = 0; i < resultSize; i++) {
-                                        a[i] = partNumbers[queryIndexes[i]];
-                                        b[i] = partCosts[queryIndexes[i]];
-                                        c[i] = partQuantities[queryIndexes[i]];
-                                    }
-                                    //list the resulting part data
-                                    listPartsData(a, b, c, resultSize);
-                                }
-                            }
+                            //create parallel arrays of only one item to reuse preexisting function
+                            int a[1] = {partNumbers[queryIndex]};
+                            float b[1] = {partCosts[queryIndex]};
+                            int c[1] = {partQuantities[queryIndex]};
+                            listPartsData(a, b, c, 1);
                         }
-                    } while (query != -1); // as long as the exit query isn't called
+                    }
                     break;
                 case 2:
                     cout << "Switching to a Linear Search algorithm capabable of finding multiple results...\n";
-                    searchType = "linear"; // switch to linear
-                    goto loopStart; // go back to option menu loop
+                    searchType = "linear";
+                    goto loopStart;
                     break;
                 case 3:
                     cout << "Switching to a Binary Search algorithm capable of finding only one result...\n";
-                    searchType = "binary"; // switch to binary
-                    goto loopStart; // go back to option menu loop
+                    searchType = "binary";
+                    goto loopStart;
                     break;
             }
         } while (optionQuery != 4); // as long as the exit query isn't called
@@ -213,25 +175,6 @@ int binarySearch(int partNumbers[], int start, int end, int query) {
         }
     //returns -1 if query is not present in array
     return -1;
-}
-
-int multipleLinearSearch(int partNumbers[], int resultsArray[], int query, int size) {
-    int results[size];
-    int resultSize = 0;
-    for(int i = 0; i < size; i++) {
-        if(partNumbers[i] == query) {
-            resultsArray[resultSize++] = i;
-        }
-    }
-
-    /*
-    int shrunkResults[resultSize];
-    for(int i = 0; i < resultSize; i++) {
-        shrunkResults[i] = results[i];
-    }
-    resultsArray = shrunkResults;
-    */
-    return resultSize;
 }
 
 //swaps two elements within an integer array
