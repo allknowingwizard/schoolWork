@@ -1,3 +1,8 @@
+/*
+Adam Stammer ID: 7369992
+January 20th, 2018, 7:14pm 
+CS250 Assignment #1: Searching and Sorting Arrays
+*/
 #include <iostream>
 #include <fstream>
 #include <iomanip>
@@ -13,6 +18,7 @@ void bubbleSort(int[], float[], int[], int);
 void listPartsData(int[], float[], int[], int);
 int binarySearch(int[], int, int, int);
 int multipleLinearSearch(int[], int[], int, int);
+int menu(string);
 
 const int MAX_DATA_SIZE = 100;
 
@@ -35,16 +41,12 @@ int main()
     //error callback
     loopStart:
         int query;
-        int optionQuery;
+        int optionQuery = 4;
         do {
-            //prints the option menu
-            cout << "Options: \n" << left << "     " << "1) Search (" << searchType << ")\n";
-            cout << "     " << "2) Linear Search (Multiple Results)\n" << "     " << "3) Binary Search (Single Result)\n";
-            cout << "     " << "4) Exit\n\n";
+            
+            //present menu and capture input
+            optionQuery = menu(searchType);
 
-            //ask user for query
-            cout << "Select An Option Above: ";
-            cin >> optionQuery;
             //switch cases the various menu items
             switch(optionQuery) {
                 //exit when the escape value is given
@@ -78,12 +80,12 @@ int main()
 
                                     //create parallel arrays of only one item to reuse preexisting listPartsData function
                                     //otherwise you could reprint the column names and then call displayItemData();
-                                    int a[1] = {partNumbers[queryIndex]};
-                                    float b[1] = {partCosts[queryIndex]};
-                                    int c[1] = {partQuantities[queryIndex]};
-                                    listPartsData(a, b, c, 1);
+                                    int tempNumbers[1] = {partNumbers[queryIndex]};
+                                    float tempCosts[1] = {partCosts[queryIndex]};
+                                    int tempQuantities[1] = {partQuantities[queryIndex]};
+                                    listPartsData(tempNumbers, tempCosts, tempQuantities, 1);
                                 }
-                            } else { // linear Search
+                            } else { //not binary search, must be linear Search
                                 int queryIndexes[MAX_DATA_SIZE];
                                 int resultSize = multipleLinearSearch(partNumbers, queryIndexes, query, size);
                                 //if there are no results inform the user and restart the search loop
@@ -93,17 +95,17 @@ int main()
                                 } else if (resultSize > 0) { // there is at least one result
                                     cout << "FOUND " << resultSize << " RESULTS\n"; // inform the user
                                     //initialize parallel result arrays
-                                    int a[resultSize];
-                                    float b[resultSize];
-                                    int c[resultSize];
+                                    int tempNumbers[resultSize];
+                                    float tempCosts[resultSize];
+                                    int tempQuantities[resultSize];
                                     // fill parallel result arrays using the result indexes from multipleLinearSearch();
                                     for (int i = 0; i < resultSize; i++) {
-                                        a[i] = partNumbers[queryIndexes[i]];
-                                        b[i] = partCosts[queryIndexes[i]];
-                                        c[i] = partQuantities[queryIndexes[i]];
+                                        tempNumbers[i] = partNumbers[queryIndexes[i]];
+                                        tempCosts[i] = partCosts[queryIndexes[i]];
+                                        tempQuantities[i] = partQuantities[queryIndexes[i]];
                                     }
                                     //list the resulting part data
-                                    listPartsData(a, b, c, resultSize);
+                                    listPartsData(tempNumbers, tempCosts, tempQuantities, resultSize);
                                 }
                             }
                         }
@@ -122,7 +124,7 @@ int main()
             }
         } while (optionQuery != 4); // as long as the exit query isn't called
 
-
+    // end of program
     return 0;
 }
 
@@ -134,6 +136,20 @@ void listPartsData(int partNumbers[], float partCosts[], int partQuantities[], i
         //lists the part data for each stored part
         displayPartInfo(partNumbers[i], partCosts[i], partQuantities[i]);
     }
+}
+
+int menu(string searchType) {
+    //prints the option menu
+            cout << "Options: \n" << left << "     " << "1) Search (" << searchType << ")\n";
+            cout << "     " << "2) Linear Search (Multiple Results)\n" << "     " << "3) Binary Search (Single Result)\n";
+            cout << "     " << "4) Exit\n\n";
+
+            //ask user for query and store in optionQuery
+            cout << "Select An Option Above: ";
+            int optionQuery = 4;
+            cin >> optionQuery;
+            // return user input
+            return optionQuery;
 }
 
 //reads input data from parts.txt and returns the size of part data
