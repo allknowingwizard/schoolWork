@@ -10,7 +10,7 @@ CS250 Assignment #1: Searching and Sorting Arrays
 using namespace std;
 
 void sortArray(int array[], int size);
-void displayPartInfo(int, int, int);
+void displayPartInfo(int, float, int);
 int readInputData(int[], float[], int[]);
 void swap(float[], int, int);
 void swap(int[], int, int);
@@ -174,7 +174,7 @@ int readInputData(int partNumbers[], float partCosts[], int partQuantities[]) {
 }
 
 //displays the information of a part on the screen in columns
-void displayPartInfo(int partNumber, int partCost, int partQty) {
+void displayPartInfo(int partNumber, float partCost, int partQty) {
     cout << right << setw(8) << partNumber << setw(8) << partCost << setw(8) << partQty << endl;
 }
 
