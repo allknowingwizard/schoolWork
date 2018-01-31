@@ -91,22 +91,28 @@ int main(int argc, char** argv/*could be: --- char *argv[] ---  */) {
     calcMaxDay(exData, maxDays);
     LOG(1, "MAX DAYS CALCULATED");
     int dayAvgs[DAYS];
-    //calculate the averages for each person within 
+    //calculate the averages for each person within exData and store it in dayAvgs
     calcAvgs(exData, dayAvgs);
     LOG(1, "AVERAGES CALCULATED");
     int totals[PEOPLE] = {0};
+    //calculate the totals for each person and store them in totals
     calcTotals(exData, totals);
     LOG(1, "TOTALS CALCULATED");
+    //output all of the data calculated and calculate and output the overall total along with each persons
+    //contribuition to the total
     outputCalculations(exData, maxDays, dayAvgs, totals, calcTotal(totals));
     LOG(1, "DONE....PROGRAM TERMINATING");
+    //exit program
     return 0;
 }
 
 void readData(int exData[][DAYS], string file) {
     ifstream inFile;
+    //open the input file stream with the given filename
     inFile.open(file.c_str());
     for(int i = 0; i < PEOPLE; i++) {
         for (int j =0 ; j < DAYS; j++) {
+            //loop through and read all of the ex data from the file and store it in exdata
             inFile >> exData[i][j];
         }
     }
@@ -115,6 +121,8 @@ void readData(int exData[][DAYS], string file) {
 void errorCheck(int exData[][DAYS]) {
     for(int i = 0; i < PEOPLE; i++) {
         for (int j = 0; j < DAYS; j++) {
+            //loop through all of exData and check to see if it is greater than zero and less than 250
+            //if not, set it to zero
             if(exData[i][j] > 250 || exData[i][j] < 0)
                 exData[i][j] = 0;
                 //LOG(3, "Zeroing out " + i + ", " + j);
@@ -124,12 +132,14 @@ void errorCheck(int exData[][DAYS]) {
 
 void calcMaxDay(int exData[][DAYS], int maxDays[]) {
     for(int i = 0; i < PEOPLE; i++) {
+        //loop through all of exData and fill maxData with the returned index found by calcMaxDayPerPerson
         maxDays[i] = calcMaxDayPerPerson(exData[i]);
     }
 }
 
 void calcAvgs(int exData[][DAYS], int dayAvgs[]) {
     for(int i =0 ; i < PEOPLE; i++) {
+        //loop through all of exData and fill dayAvgs with the averages found by calcAvgPerDay
         dayAvgs[i] = calcAvgPerDay(exData[i]);
     }
 }
@@ -137,6 +147,7 @@ void calcAvgs(int exData[][DAYS], int dayAvgs[]) {
 void calcTotals(int exData[][DAYS], int totals[]) {
     for(int i = 0; i < PEOPLE; i++) {
         for(int j = 0; j < DAYS; j++) {
+            //loop through all of exData and fill totals with the row (person) totals
             totals[i] += exData[i][j];
         }
     }
@@ -146,7 +157,9 @@ int calcTotal(int totals[]) {
     int sum = 0;
     for(int i = 0; i < PEOPLE; i++) {
         sum += totals[i];
+        //loop through all of totals and add it all to a sum
     }
+    //return the total found
     return sum;
 }
 
@@ -155,35 +168,44 @@ int calcMaxDayPerPerson(int exDataP[]) {
     for (int i = 0; i < DAYS; i++) {
         if(exDataP[i] > exDataP[maxIndex])
             maxIndex = i;
+            //loop through all of exDataP and if the current value is greater than the value
+            //of the current stored value, replace the stored index with the new one
     }
+    //return the maxIndex found
     return maxIndex;
 }
 
 int calcAvgPerDay(int exDataP[]) {
     int sum = 0;
     for (int i =0 ; i < DAYS; i++) {
+        //loop through all of exDataP and add the values to sum
         sum += exDataP[i];
     }
+    //return the found sum divided by the days, which is the average
     return sum / DAYS;
 }
 
 void outputCalculations(int exData[][DAYS], int maxDays[], int dayAvgs[], int totals[], int total) {
     for (int i = 0; i < PEOPLE; i++) {
+        //loop through all of the people and print out the found statistics in an ordered manner
         cout << "Person " << i+1 << ":"<< endl;
         cout << "   " << "Performed the most exercise on the " << maxDays[i]+1 << daySuffix(maxDays[i]) << " day with " << exData[i][maxDays[i]] << " minutes." << endl;
         cout << "   " << "Had an average exercise of " << dayAvgs[i] << " minutes per day.\n";
-        cout << "   " << "Contributed "  << ((float) totals[i] / (float) total) * 100.0 << "% to the group total.\n";
+        cout << "   " << "Contributed "  << /*calculate the percentage contributed*/((float) totals[i] / (float) total) * 100.0 << "% to the group total.\n";
     }
 }
 
 string daySuffix(int dayIndex) {
     int day = dayIndex+1;
+    //default the suffix to th, because it is the most common
     string suffix = "th";
+    //if the day suffix needs to change, change it and then return it
     if(day == 1)
         suffix = "st";
     if(day == 2)
         suffix = "nd";
     if(day == 3)
         suffix = "rd";
+    //since the max day is 7 we only need to check the first 3, the last 4 all end in the default "th"
     return suffix;
 }
