@@ -4,8 +4,8 @@
 
     Exercise Calculation Program:
             Usage: exercise.exe [option]
-                --log %initializes logging to the screen
-                --file [file] -> sets the file name to file
+                "--log"..............initializes logging to the screen
+                "--file [filename]"......sets the file name to file (relative to program location)
 */
 #include <iostream>
 #include <iomanip>
@@ -13,6 +13,7 @@
 
 using namespace std;
 
+// constants for array size
 const int DAYS = 7;
 const int PEOPLE = 5;
 
@@ -30,7 +31,9 @@ void outputCalculations(int[][DAYS], int[], int[], int[], int); // prints to the
                                                                 // the relative contribution to the total,
                                                                 // and the total minutes of exercise for the week
 void LOG(int, string);
+//turn log on or off
 static bool log = false;
+//prints out a message of the given priority
 void LOG(int priority, string logMes) {
     if(log) {
         cout << "-----------------------" << endl;
@@ -47,34 +50,48 @@ void LOG(int priority, string logMes) {
     }
 }                                                          
 
-int main(int argc, char** argv) {
+int main(int argc, char** argv/*could be: --- char *argv[] ---  */) {
+    //default filename 
     string file = "ex_data.txt";
+    //if there are arguments
     if(argc > 1) {
+        //loop through them all
         for(int i = 1; i < argc; i++) {
             string arg = (string) argv[i];
+            //turn on logging
             if(arg == "--log") {
                 log = true;
                 LOG(1, "LOGGING INITIALIZED");
-            } else if(arg == "--file" || arg == "-f") {
+            } else if(arg == "--file" || arg == "-f") {// change the filename
                 if(argc >= i+2 && ((string) argv[i+1])[0] != '-') {
                     file = string(argv[i+1]);
-                    i++;
+                    i++; // skip the next argument becuase it is the file name
                 } else {
+                    //display usage
                     cout << "Usage: exercise.exe --file [filename]";
                     LOG(4, "FILE NAME NOT SET...TERMINATING");
                     return 1;
                 }
+            } else {
+                //if the arguments mean nothing, print out the usage
+                cout << "Usage: exercise [options]\n    \"--log\"       turns on debug logging\n"
+                        "   \"--file [file]\"       sets the active data file (default: ex_data.txt)\n";
+                return 1;
             }
         }
     }
     int exData[PEOPLE][DAYS];
+    //read data from file into exData
     readData(exData, file);
+    //check the read exData for errors and correct
     errorCheck(exData);
     LOG(1, "DATA READ AND ERROR CHECKED");
     int maxDays[DAYS];
+    //calculate the peak exercise day for each person in exData and store the indexes into maxDays
     calcMaxDay(exData, maxDays);
     LOG(1, "MAX DAYS CALCULATED");
     int dayAvgs[DAYS];
+    //calculate the averages for each person within 
     calcAvgs(exData, dayAvgs);
     LOG(1, "AVERAGES CALCULATED");
     int totals[PEOPLE] = {0};
@@ -87,14 +104,12 @@ int main(int argc, char** argv) {
 
 void readData(int exData[][DAYS], string file) {
     ifstream inFile;
-    inFile.open(file);
-    //LOG(1, "Reading data");
+    inFile.open(file.c_str());
     for(int i = 0; i < PEOPLE; i++) {
         for (int j =0 ; j < DAYS; j++) {
             inFile >> exData[i][j];
         }
     }
-    //LOG(1, "Done reading data");
 }
 
 void errorCheck(int exData[][DAYS]) {
