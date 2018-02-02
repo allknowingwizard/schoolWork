@@ -20,7 +20,7 @@ const int PEOPLE = 5;
 string daySuffix(int); // returns the suffix of the day based on index (index 1 is the second day -> returns "nd" from "2nd")
 void calcTotals(int[][DAYS], int[]); // calculates the totals per person and puts them in an int[]
 void readData(int[][DAYS], string); //reads the input data from ex_data.txt
-void errorCheck(int[][DAYS]); // check the input data for errors and zero any out
+void errorCheck(int [][DAYS]); // check the input data for errors and zero any out
 void calcMaxDay(int[][DAYS], int[]); // calculates the peak exercise day for each person, index of day stores in int[]
 void calcAvgs(int[][DAYS], int[]); // calculates the average exercise per day per person, index of avg stored in int[]
 int calcTotal(int[]); //returns the total exercise done by all of the people throughout the week
@@ -118,7 +118,7 @@ void readData(int exData[][DAYS], string file) {
     }
 }
 
-void errorCheck(int exData[][DAYS]) {
+void errorCheck(int  exData[][DAYS]) {
     for(int i = 0; i < PEOPLE; i++) {
         for (int j = 0; j < DAYS; j++) {
             //loop through all of exData and check to see if it is greater than zero and less than 250
