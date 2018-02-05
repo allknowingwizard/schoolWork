@@ -25,7 +25,7 @@ void calcMaxDay(int[][DAYS], int[]); // calculates the peak exercise day for eac
 void calcAvgs(int[][DAYS], int[]); // calculates the average exercise per day per person, index of avg stored in int[]
 int calcTotal(int[]); //returns the total exercise done by all of the people throughout the week
 int calcMaxDayPerPerson(int[]); //calculates the total exercise for the week for one person and returns it
-int calcAvgPerDay(int[]); // calculates the avg exercise per person on any one day and returns it
+int calcAvgPerDay(int[][DAYS], int); // calculates the avg exercise per person on any one day and returns it
 void outputCalculations(int[][DAYS], int[], int[], int[], int); // prints to the screen the peak exercise day and value for each person,
                                                                 // the average minutes of exercise per day for the group,
                                                                 // the relative contribution to the total,
@@ -138,9 +138,9 @@ void calcMaxDay(int exData[][DAYS], int maxDays[]) {
 }
 
 void calcAvgs(int exData[][DAYS], int dayAvgs[]) {
-    for(int i =0 ; i < PEOPLE; i++) {
+    for(int i =0 ; i < DAYS; i++) {
         //loop through all of exData and fill dayAvgs with the averages found by calcAvgPerDay
-        dayAvgs[i] = calcAvgPerDay(exData[i]);
+        dayAvgs[i] = calcAvgPerDay(exData, i);
     }
 }
 
@@ -175,24 +175,90 @@ int calcMaxDayPerPerson(int exDataP[]) {
     return maxIndex;
 }
 
-int calcAvgPerDay(int exDataP[]) {
+int calcAvgPerDay(int exData[][DAYS], int day) {
     int sum = 0;
-    for (int i =0 ; i < DAYS; i++) {
+    for (int i = 0 ; i < PEOPLE; i++) {
         //loop through all of exDataP and add the values to sum
-        sum += exDataP[i];
+        sum += exData[i][day];
     }
-    //return the found sum divided by the days, which is the average
-    return sum / DAYS;
+    //return the found sum divided by the amount of people, which is the average
+    return sum / PEOPLE;
+}
+
+int averageByPerson(int total) {
+    return total / DAYS;
+}
+
+void printLine(int length) {
+    for (int l = 0; l < length; l++) {
+        cout << "-";
+    }
+}
+
+int dayTotal(int exDataD[][DAYS], int day) {
+    int daySum = 0;
+    for(int x = 0; x < PEOPLE; x++) {
+            daySum += exDataD[x][day];
+    }
+    return daySum;
+}
+
+void printTable(int exData[][DAYS], int dayAvgs[], int totals[], int total) {
+    cout << "     " << setw(10) << right << "Sunday";
+    cout << setw(10) << "Monday";
+    cout << setw(10) << "Tuesday";
+    cout << setw(10) << "Wednesday";
+    cout << setw(10) << "Thursday";
+    cout << setw(10) << "Friday";
+    cout << setw(10) << "Saturday";
+    
+    cout << setw(10) << "Total";
+    cout << setw(10) << "Avg";
+    cout << setw(10) << "Contr. %" << endl;
+    printLine(105);
+    cout << endl;
+    for (int x = 0; x < PEOPLE; x++) {
+        cout << "P"<< (x+1) << ":  "; 
+        for (int y = 0; y < DAYS; y++) {
+            cout << setw(10) << exData[x][y];
+        }
+
+        cout << setw(10) << totals[x];
+        cout << setw(10) << (totals[x] / DAYS);
+        cout << setw(10) << fixed << setprecision(4) << ((float) totals[x] / (float) total) * 100;
+
+        cout << endl;
+        printLine(105);
+        cout << endl;
+    }
+    cout << "Total";
+    for(int i = 0; i < DAYS; i++) {
+        cout << setw(10) << dayTotal(exData, i);
+    }
+    cout << setw(10) << total << setw(10) << " " << setw(10) << "100%" << endl;
+    printLine(105);
+    cout << endl;
+    cout << "Avg  ";
+    for(int i =0 ; i < DAYS; i++) {
+        cout << setw(10) << dayTotal(exData, i) / PEOPLE;
+    }
+    cout << setw(10) << (total / PEOPLE) << endl;
+    printLine(105);
+    cout << endl << endl << endl;
 }
 
 void outputCalculations(int exData[][DAYS], int maxDays[], int dayAvgs[], int totals[], int total) {
+    //table
+    printTable(exData, dayAvgs, totals, total);
+    //table
     for (int i = 0; i < PEOPLE; i++) {
         //loop through all of the people and print out the found statistics in an ordered manner
         cout << "Person " << i+1 << ":"<< endl;
         cout << "   " << "Performed the most exercise on the " << maxDays[i]+1 << daySuffix(maxDays[i]) << " day with " << exData[i][maxDays[i]] << " minutes." << endl;
-        cout << "   " << "Had an average exercise of " << dayAvgs[i] << " minutes per day.\n";
-        cout << "   " << "Contributed "  << /*calculate the percentage contributed*/((float) totals[i] / (float) total) * 100.0 << "% to the group total.\n";
+        cout << "   " << "Had an average exercise of " << averageByPerson(totals[i]) << " minutes per day.\n";
+        cout << "   " << "Contributed " << totals[i] << " minutes (" << fixed << setprecision(4) << /*calculate the percentage contributed*/((float) totals[i] / (float) total) * 100.0 << "%) to the group total.\n";
     }
+    cout << "\nThe group completed a total of " << total << " minutes of exercise throughout the entire week.\n";
 }
 
 string daySuffix(int dayIndex) {
