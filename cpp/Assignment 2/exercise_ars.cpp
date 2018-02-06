@@ -22,11 +22,11 @@ void calcTotals(int[][DAYS], int[]); // calculates the totals per person and put
 void readData(int[][DAYS], string); //reads the input data from ex_data.txt
 void errorCheck(int [][DAYS]); // check the input data for errors and zero any out
 void calcMaxDay(int[][DAYS], int[]); // calculates the peak exercise day for each person, index of day stores in int[]
-void calcAvgs(int[][DAYS], int[]); // calculates the average exercise per day per person, index of avg stored in int[]
+void calcAvgs(int[][DAYS], float[]); // calculates the average exercise per day per person, index of avg stored in int[]
 int calcTotal(int[]); //returns the total exercise done by all of the people throughout the week
 int calcMaxDayPerPerson(int[]); //calculates the total exercise for the week for one person and returns it
-int calcAvgPerDay(int[][DAYS], int); // calculates the avg exercise per person on any one day and returns it
-void outputCalculations(int[][DAYS], int[], int[], int[], int); // prints to the screen the peak exercise day and value for each person,
+float calcAvgPerDay(int[][DAYS], int); // calculates the avg exercise per person on any one day and returns it
+void outputCalculations(int[][DAYS], int[], float[], int[], int); // prints to the screen the peak exercise day and value for each person,
                                                                 // the average minutes of exercise per day for the group,
                                                                 // the relative contribution to the total,
                                                                 // and the total minutes of exercise for the week
@@ -90,7 +90,7 @@ int main(int argc, char** argv/*could be: --- char *argv[] ---  */) {
     //calculate the peak exercise day for each person in exData and store the indexes into maxDays
     calcMaxDay(exData, maxDays);
     LOG(1, "MAX DAYS CALCULATED");
-    int dayAvgs[DAYS];
+    float dayAvgs[DAYS];
     //calculate the averages for each person within exData and store it in dayAvgs
     calcAvgs(exData, dayAvgs);
     LOG(1, "AVERAGES CALCULATED");
@@ -113,7 +113,7 @@ void readData(int exData[][DAYS], string file) {
     for(int i = 0; i < PEOPLE; i++) {
         for (int j =0 ; j < DAYS; j++) {
             //loop through and read all of the ex data from the file and store it in exdata
-            inFile >> exData[i][j];
+            inFile >> exData[i][j]; 
         }
     }
 }
@@ -137,7 +137,7 @@ void calcMaxDay(int exData[][DAYS], int maxDays[]) {
     }
 }
 
-void calcAvgs(int exData[][DAYS], int dayAvgs[]) {
+void calcAvgs(int exData[][DAYS], float dayAvgs[]) {
     for(int i =0 ; i < DAYS; i++) {
         //loop through all of exData and fill dayAvgs with the averages found by calcAvgPerDay
         dayAvgs[i] = calcAvgPerDay(exData, i);
@@ -175,21 +175,23 @@ int calcMaxDayPerPerson(int exDataP[]) {
     return maxIndex;
 }
 
-int calcAvgPerDay(int exData[][DAYS], int day) {
+float calcAvgPerDay(int exData[][DAYS], int day) {
     int sum = 0;
     for (int i = 0 ; i < PEOPLE; i++) {
         //loop through all of exDataP and add the values to sum
         sum += exData[i][day];
     }
     //return the found sum divided by the amount of people, which is the average
-    return sum / PEOPLE;
+    return (float) sum / PEOPLE;
 }
 
-int averageByPerson(int total) {
-    return total / DAYS;
+float averageByPerson(int total) {
+    return (float) total / DAYS;
+    // just calculate the average exercise per day
 }
 
 void printLine(int length) {
+    //loop through length amount of times and print a hyphen 
     for (int l = 0; l < length; l++) {
         cout << "-";
     }
@@ -197,13 +199,16 @@ void printLine(int length) {
 
 int dayTotal(int exDataD[][DAYS], int day) {
     int daySum = 0;
+    //loop through each person and add their exercise for the day to daySum
     for(int x = 0; x < PEOPLE; x++) {
             daySum += exDataD[x][day];
     }
+    //return the day total found above
     return daySum;
 }
 
-void printTable(int exData[][DAYS], int dayAvgs[], int totals[], int total) {
+void printTable(int exData[][DAYS], float dayAvgs[], int totals[], int total) {
+    //print out all of the headings
     cout << "     " << setw(10) << right << "Sunday";
     cout << setw(10) << "Monday";
     cout << setw(10) << "Tuesday";
@@ -215,39 +220,66 @@ void printTable(int exData[][DAYS], int dayAvgs[], int totals[], int total) {
     cout << setw(10) << "Total";
     cout << setw(10) << "Avg";
     cout << setw(10) << "Contr. %" << endl;
+    //print a line
     printLine(105);
     cout << endl;
+    //loop through all of the people
     for (int x = 0; x < PEOPLE; x++) {
-        cout << "P"<< (x+1) << ":  "; 
+        //print who it is
+        cout << "Person "<< (x+1) << ":  "; 
+        //loop through all of the days and print their exercise for the day
         for (int y = 0; y < DAYS; y++) {
             cout << setw(10) << exData[x][y];
         }
-
+        //print their totals
         cout << setw(10) << totals[x];
-        cout << setw(10) << (totals[x] / DAYS);
-        cout << setw(10) << fixed << setprecision(4) << ((float) totals[x] / (float) total) * 100;
+        //their avg per day
+        cout << setw(10) << ((float) totals[x] / (float) DAYS);
+        //and their relative contribution
+        cout << setw(9) << fixed << setprecision(4) << (((float) totals[x] / (float) total) * 100.0) << "%";
 
         cout << endl;
+        //print a line
         printLine(105);
         cout << endl;
     }
+    //on a new row, print the Total Label
     cout << "Total";
+    //loop throug the days printing the dayTotal
     for(int i = 0; i < DAYS; i++) {
         cout << setw(10) << dayTotal(exData, i);
     }
-    cout << setw(10) << total << setw(10) << " " << setw(10) << "100%" << endl;
+    //print the overall total
+    cout << setw(10) << total;
+    //print the overall average of person Averages
+    cout << setw(10) << (float) total / (float) DAYS;
+    
+    //print total contribution and print a line
+    cout << setw(10) << "100%" << endl;
     printLine(105);
     cout << endl;
+    //avg label on new row
     cout << "Avg  ";
+    float avgSum = 0;
+    //loop through all of the days print the daily average exercise
     for(int i =0 ; i < DAYS; i++) {
-        cout << setw(10) << dayTotal(exData, i) / PEOPLE;
+        float dayAvg = ((float) dayTotal(exData, i) / (float) PEOPLE);
+        cout << setw(10) << dayAvg;
+        //also add to average sum
+        avgSum += dayAvg;
     }
-    cout << setw(10) << (total / PEOPLE) << endl;
+    //print the total average
+    cout << setw(10) << ((float) total / (float) PEOPLE);
+    //the average of averages
+    cout << setw(10) << (float) avgSum / DAYS;
+    //the average contribution
+    cout << setw(10) << "20%" << endl;
+    //and a new line
     printLine(105);
     cout << endl << endl << endl;
 }
 
-void outputCalculations(int exData[][DAYS], int maxDays[], int dayAvgs[], int totals[], int total) {
+void outputCalculations(int exData[][DAYS], int maxDays[], float dayAvgs[], int totals[], int total) {
     //table
     printTable(exData, dayAvgs, totals, total);
     //table
