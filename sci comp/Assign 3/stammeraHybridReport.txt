@@ -2,13 +2,13 @@
 Test 1
 Octave Call:  stammeraHybrid(f,-2.100e+000,-1.800e+000,1.000e-016)
 True Root:  -2.0000000000000000
-Your Root:  -1.9999877929687504
-Relative Error: 6.104e-006   FAIL
-Iterations: 18   FAIL 
+Your Root:  -2.0000000000000000
+Relative Error: 0.000e+000   PASS
+Iterations: 6   PASS!
 
 Test 2
 Octave Call:  stammeraHybrid(f,0.000e+000,1.000e+001,1.000e-014)
 True Root:  3.0165390218980477
-Your Root:  3.0165481567382812
-Relative Error: 3.028e-006   FAIL
-Iterations: 26   FAIL 
+Your Root:  3.0165390218980472
+Relative Error: 1.472e-016   PASS
+Iterations: 17   PASS 
