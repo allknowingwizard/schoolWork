@@ -6,17 +6,18 @@ CS250 Assignment #1: Searching and Sorting Arrays
 #include <iostream>
 #include <fstream>
 #include <iomanip>
+#include <memory>
 
 using namespace std;
 
 void sortArray(int array[], int size);
 void displayPartInfo(int, float, int);
 void readInputData(ifstream &a, unique_ptr<int[]> &, unique_ptr<float[]> &, unique_ptr<int[]> &, int);
-int readInputDataSize(ifstream &f);
+int readInputDataSize(ifstream &);
 void swap(unique_ptr<float[]> &, int, int);
 void swap(unique_ptr<int[]> &, int, int);
 void bubbleSort(unique_ptr<int[]> &, unique_ptr<float[]> &, unique_ptr<int[]> &, int);
-void listPartsData(unique_ptr<int[]> &, unique_ptr<float[]> &, unique_ptr<int[]> &, int);
+void listPartsData(unique_ptr<int[]> &, unique_ptr<float[]>&, unique_ptr<int[]>&, int);
 int binarySearch(unique_ptr<int[]> &, int, int, int);
 int multipleLinearSearch(unique_ptr<int[]> &, unique_ptr<int[]> &, int, int);
 int menu(string);
@@ -105,7 +106,7 @@ int main()
                                     listPartsData(tempNumbers, tempCosts, tempQuantities, 1);
                                 }
                             } else { //not binary search, must be linear Search
-                                int queryIndexes[MAX_DATA_SIZE];
+                                int queryIndexes[size];
                                 int resultSize = multipleLinearSearch(partNumbers, queryIndexes, query, size);
                                 //if there are no results inform the user and restart the search loop
                                 if(resultSize == 0) {
@@ -211,7 +212,7 @@ void bubbleSort(unique_ptr<int[]> & partNumbers, unique_ptr<float[]> & partCosts
         for (int i = 0; i < size - 1; i++)
         {   
             //if the lower index has a higher value than the higher index
-            if (*(partNumbers+i) > *(partNumbers+i+1))
+            if (partNumbers[i] > partNumbers[i+1])
             {   
                 // swaps the two variables in each array
                 swap(partNumbers, i, i+1);
