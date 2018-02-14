@@ -222,7 +222,7 @@ void bubbleSort(unique_ptr<int[]> & partNumbers, unique_ptr<float[]> & partCosts
 		for (int i = 0; i < size - 1; i++)
 		{
 			//if the lower index has a higher value than the higher index
-			if (partNumbers[i] > partNumbers[i + 1])
+			if (*(partNumbers.get() + i) > *(partNumbers.get()+i + 1))
 			{
 				// swaps the two variables in each array
 				swap(partNumbers, i, i + 1);
@@ -281,16 +281,19 @@ int multipleLinearSearch(unique_ptr<int[]> & partNumbers, unique_ptr<int[]> &res
 //swaps two elements within an integer array
 void swap(unique_ptr<int[]> & parts, int indexOne, int indexTwo) {
 	//stores first indexed value in temp
-	int temp = parts[indexOne];
+	int temp = *(parts.get() + indexOne);
 	//stores second index value in the first index
-	parts[indexOne] = parts[indexTwo];
+	*(parts.get()+indexOne) = *(parts.get()+indexTwo);
 	//sets the second index value to temp
-	parts[indexTwo] = temp;
+	*(parts.get()+indexTwo) = temp;
 }
 //swaps two elements within a float array
 void swap(unique_ptr<float[]> & parts, int indexOne, int indexTwo) {
 	// see swap(int[], int, int) for comments
-	int temp = parts[indexOne];
-	parts[indexOne] = parts[indexTwo];
-	parts[indexTwo] = temp;
+	//stores first indexed value in temp
+	int temp = *(parts.get() + indexOne);
+	//stores second index value in the first index
+	*(parts.get()+indexOne) = *(parts.get()+indexTwo);
+	//sets the second index value to temp
+	*(parts.get()+indexTwo) = temp;
 }
