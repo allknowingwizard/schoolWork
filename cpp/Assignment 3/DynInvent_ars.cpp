@@ -182,13 +182,13 @@ int menu(string searchType) {
 }
 
 int readInputDataSize(ifstream &inFile) {
-	int dataSize = 0;
-	inFile >> dataSize;
-	if (dataSize <= 0) {
+	int dataSize = 0; // default size to 0
+	inFile >> dataSize; // read first int into dataSize
+	if (dataSize <= 0) { // if it's too small, not a valid size, complain and exit
 		cout << "Inopperable data size. Not enough part data.";
 		return 0;
 	}
-	return dataSize;
+	return dataSize; // otherwise, return the found size
 }
 
 //reads input data from parts.txt and returns the size of part data
