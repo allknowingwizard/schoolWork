@@ -101,7 +101,7 @@ loopStart:
 						}
 						else {
 							//if something is found display it on screen
-							cout << "FOUND RESULT\n";
+							cout << "FOUND RESULT" << queryIndex << "\n";
 
 							//create parallel arrays of only one item to reuse preexisting listPartsData function
 							//otherwise you could reprint the column names and then call displayItemData();
@@ -111,6 +111,7 @@ loopStart:
 							tempCosts[0] = partCosts[queryIndex];
 							unique_ptr<int[]> tempQuantities;
 							tempQuantities[0] = partQuantities[queryIndex];
+							cout << "out";
 							listPartsData(tempNumbers, tempCosts, tempQuantities, 1);
 						}
 					}
