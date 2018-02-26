@@ -5,6 +5,6 @@ function  u=preProcess3(data,nChars) % if you reached this point:
     %      and rearrange into 2D array of dim:  6 x nChars 
     
      u = zeros(6,nChars);  % preallocated; your job is to fill this in 
-     v = data.reshape(12, nChars);
+     v = reshape(data, 12, nChars);
      u = v([2, 4, 6, 8, 10, 12], [1:nChars]);
 end
