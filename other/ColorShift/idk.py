@@ -26,9 +26,9 @@ def main():
                                 #a = input_pixels[x, y][0] / 255.0
                                 #b = input_pixels[x, y][1] / 255.0
                                 #c = input_pixels[x, y][2] / 255.0
-                                a = input_pixels[x,y][0]
-                                b = input_pixels[x,y][1]
-                                c = input_pixels[x,y][2]
+                                a = input_pixels[(x,y)][0]
+                                b = input_pixels[(x,y)][1]
+                                c = input_pixels[(x,y)][2]
 
                                 avg = [0,0,0]
                                 adj = 0
@@ -54,7 +54,7 @@ def main():
                                         adj+=1
                                 for i in range(0,2):
                                         avg[i] /= adj
-                                input_pixels[x,y] = avg
+                                input_pixels[(x,y)] = avg
                 print(z);
         for x in range(width):
                         for y in range(height):
