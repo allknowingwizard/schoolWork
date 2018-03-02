@@ -26,40 +26,43 @@ def main():
                                 #a = input_pixels[x, y][0] / 255.0
                                 #b = input_pixels[x, y][1] / 255.0
                                 #c = input_pixels[x, y][2] / 255.0
-                                a = input_pixels[(x,y)][0]
-                                b = input_pixels[(x,y)][1]
-                                c = input_pixels[(x,y)][2]
 
                                 avg = [0,0,0]
-                                adj = 0
-                                if y > 0:
-                                        up = input_pixels[x,y-1]
-                                        for i in range(0,2):
-                                                avg[i] += up[i]
-                                        adj+=1
-                                if y < height-1:
-                                        down = input_pixels[x,y+1]
-                                        for i in range(0,2):
-                                                avg[i] += down[i]
-                                        adj+=1
-                                if x > 0:
-                                        left = input_pixels[x-1,y]
-                                        for i in range(0,2):
-                                                avg[i] += left[i]
-                                        adj+=1
-                                if x < width-1:
-                                        right = input_pixels[x+1,y]
-                                        for i in range(0,2):
-                                                avg[i] += right[i]
-                                        adj+=1
-                                for i in range(0,2):
-                                        avg[i] /= adj
-                                input_pixels[(x,y)] = avg
+                                avg[0] = input_pixels[x,y][0]
+                                avg[1] = input_pixels[x,y][1]
+                                avg[2] = input_pixels[x,y][2]
+
+                                for i in range(0,3):
+                                        #if(avg[i] < 64):
+                                        #        if(avg[i] % 2 == 0):
+                                        #                avg[i] += 50
+                                        #        else:
+                                        #                avg[i] -= 50
+                                        #elif(avg[i] < 128):
+                                        #        if(avg[i] % 2 == 0):
+                                        #                avg[i] += 100
+                                        #        else:
+                                        #                avg[i] -= 100
+                                        #elif(avg[i] < 196):
+                                        #        if(avg[i] % 2 == 0):
+                                        #                avg[i] += 150
+                                        #        else:
+                                        #                avg[i] -= 150
+                                        #else:
+                                        #        if(avg[i] % 2 == 0):
+                                        #                avg[i] += 200
+                                        #        else:
+                                        #                avg[i] -= 200
+                                        avg[i] = int(3*pow(avg[i],3) + pow(avg[i], 2) -4 * avg[i])
+                                        avg[i] %= 256
+                                
+                                input_pixels[x,y] = tuple(avg)
+                                output_image.putpixel((x,y),(input_pixels[x,y][0], input_pixels[x,y][1], input_pixels[x,y][2]))
                 print(z);
-        for x in range(width):
-                        for y in range(height):
-                                output_image.putpixel((x,y),(int(avg[0]), int(avg[1]), int(avg[2])))
-        output_image.save(filename + '_output.bmp')
+       # for x in range(width):
+       #                 for y in range(height):
+       #                         output_image.putpixel((x,y),(input_pixels[x,y][0], input_pixels[x,y][1], input_pixels[x,y][2]))
+        output_image.save(filename + '_output.jpg')
         output_image.show()
 
 def get_adj_RGB(color, searched, order, color_size):
