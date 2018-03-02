@@ -1,6 +1,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cstring>
+#include <string>
 
 using namespace std;
 
@@ -59,5 +60,7 @@ int main() {
     char b[4*5+1];
     cstringtoMorse(c, b);
     cout << b << endl;
+    string s = "983";
+    cout << to_string(stoi(s));
     return 0;
 }
