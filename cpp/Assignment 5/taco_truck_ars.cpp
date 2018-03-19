@@ -23,7 +23,7 @@ void addItemToBill(MenuItem); // adds the given menuitem to the bill
 
 
 int main() {
-	MenuItem menu[15] = {};
+	MenuItem menu[15];
 	int x = readMenuItemsFromFile(menu);
 	if(x == -1) {
 		cout << "Failed to open file......" << endl << "closing now" << endl;
@@ -42,7 +42,7 @@ void printItemInfoByType(MenuItem menu[15], ItemType itemType) {
 	MenuItem mi;
 	for(int i = 0; i < 15; i++) {
 		if((mi = menu[i]).type == itemType) {
-			cout << i << ":  " << "Item: " << mi.item << "  Cost: " << mi.cost << "  Qty: " << mi.qty << endl; 
+			cout << i << ":  " << "Item: " << mi.item << "  Cost: " << mi.cost/* << "  Qty: " << mi.qty*/ << endl; 
 		}
 	}
 }
@@ -59,7 +59,7 @@ int readMenuItemsFromFile(MenuItem menuItem[15]) {
 		MenuItem i;
 		string iType = "";
 		int iter = 0;
-		while(file >> i.item && file >> iType && file >> i.cost && file >> i.qty) {
+		while(file >> i.item && file >> iType && file >> i.cost) {
 			if(iType == "ENTREE")
 				i.type = ENTREE;
 			else if(iType == "DRINK")
