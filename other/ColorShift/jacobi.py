@@ -3,10 +3,11 @@ import numpy as np
 ITERATION_LIMIT = 50
 
 # initialize the matrix
-A = np.array([[1., 2.],
-              [3., 4.]])
+A = np.array([[1., 2., 3.],
+              [0., 1., 0.],
+	      [0., 0., 1.]])
 # initialize the RHS vector
-b = np.array([3., 7.])
+b = np.array([3., 1., 0.])
 # prints the system
 #print("System:")
 def jacobi(A, b):
