@@ -33,7 +33,7 @@ int main() {
 	printMenu();
 	string input = "";
 	
-	printItemInfoByType(menu, ItemType::ENTREE);
+	printItemInfoByType(menu, ENTREE);
 
 	return 0;
 }
@@ -61,11 +61,11 @@ int readMenuItemsFromFile(MenuItem menuItem[15]) {
 		int iter = 0;
 		while(file >> i.item && file >> iType && file >> i.cost && file >> i.qty) {
 			if(iType == "ENTREE")
-				i.type = ItemType::ENTREE;
+				i.type = ENTREE;
 			else if(iType == "DRINK")
-				i.type = ItemType::DRINK;
+				i.type = DRINK;
 			else if(iType == "DESSERT")
-				i.type = ItemType::DESSERT;
+				i.type = DESSERT;
 			else {
 				cout << "Error finding type!" << endl;
 				file.close();
