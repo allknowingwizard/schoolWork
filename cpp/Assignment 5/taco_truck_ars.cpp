@@ -20,7 +20,7 @@ void readMenuInput(string &); //reads input from the user based on the menu and 
 int readMenuItemsFromFile(MenuItem []); //reads the menuitems from the file taco_menu.txt and stores them in the given array
 void printItemInfoByType(MenuItem [], ItemType); // menu option 1 - prints the item info of all the items matching the given itemtype
 void printItemInfo(MenuItem); // prints the info of the given menuitem
-void addItemToBill(MenuItem, int, MenuItem mi); // add the given menuItem to the given position in the bill
+void addItemToBill(MenuItem [], int &, MenuItem mi); // add the given menuItem to the given position in the bill
 
 int main() {
 	MenuItem menu[15];
@@ -41,7 +41,7 @@ int main() {
 		if(iIn == 1) {
 			cout << "\t1. Entree\n\t2. Drink\n\t3. Dessert\n\tSelect an item type: ";
 			readMenuInput(input);
-			printItemInfoByType(menu, static_cast<ItemType>(stoi(input-1)));
+			printItemInfoByType(menu, ENTREE);
 		} else if(iIn == 2) {
 			cout << "\t1. Add by Number\n\t2. Search by Name\n";
 			readMenuInput(input);
@@ -49,7 +49,7 @@ int main() {
 			if(iIn == 1) {
 				cout << "Please enter the number: ";
 				readMenuInput(input);
-				iIn = stoi(input);
+//				iIn = stoi(input);
 				addItemToBill(bill, billQty, menu[iIn-1]);
 			}
 		} else if(iIn == 3) {
