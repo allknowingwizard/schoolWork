@@ -15,12 +15,11 @@ enum ItemType {ENTREE, DRINK, DESSERT};
 
 struct MenuItem {string item; ItemType type; float cost; int qty;};
 
-void printMenu(); // prints the menu to the screen
-void readMenuInput(string &); //reads input from the user based on the menu and stores it into the given string
+int printMenu(string[], string &); // prints the menu to the screen
 int readMenuItemsFromFile(MenuItem []); //reads the menuitems from the file taco_menu.txt and stores them in the given array
 void printItemInfoByType(MenuItem [], ItemType); // menu option 1 - prints the item info of all the items matching the given itemtype
 void printItemInfo(MenuItem); // prints the info of the given menuitem
-void addItemToBill(MenuItem [], int &, MenuItem mi); // add the given menuItem to the given position in the bill
+void addItemToBill(MenuItem[], MenuItem [], int &, MenuItem mi); // add the given menuItem to the given position in the bill
 
 int main() {
 	MenuItem menu[15];
@@ -39,9 +38,15 @@ int main() {
 		readMenuInput(input);
 		iIn = stoi(input);
 		if(iIn == 1) {
-			cout << "\t1. Entree\n\t2. Drink\n\t3. Dessert\n\tSelect an item type: ";
-			readMenuInput(input);
-			printItemInfoByType(menu, ENTREE);
+			int i = -1;
+			while(i != 0) {
+				i = printMenu(ITEM_TYPES, input);
+				if(i == 0) {
+					int choice = stoi(input);
+					if(choice > 0 && choice < 4)
+						printItemInfoByType(menu, static_cast<ItemType>(choice));
+				} else {i = -1;  cout << "Invalid Input. Please Try Again.\n";}
+			}
 		} else if(iIn == 2) {
 			cout << "\t1. Add by Number\n\t2. Search by Name\n";
 			readMenuInput(input);
