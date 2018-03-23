@@ -16,6 +16,7 @@ enum ItemType {ENTREE, DRINK, DESSERT, NUM_TYPES};
 
 const string ITEM_TYPES[] = {"ENTREE", "DRINK", "DESSERT", "Please Select a Type"};
 const int MENU_SIZE = 15;
+const string INVALID = "Not a valid option. Please try again.\n";
 
 struct MenuItem {string name; ItemType type; float cost; int qty;/*cumulative sales, or qty to buy*/};
 struct Check {float total; float tax; float tip;};
@@ -44,6 +45,7 @@ int main() {
 	const string mainMenu[] = {"Print Items By Type", "Add Item(s)", "Print Current Total", "Finalize Sale", "Print Revenue By Type", "Exit", "Please Select An Option"};
 	const string addItemMenu[] = {"Add By Number", "Search By Name", "Please Select a Method"};
 	string input = "";
+	
 
 	while(running) {
 		int val = -10;
