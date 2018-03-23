@@ -3,9 +3,9 @@ function newImg = threshold(img,percentile)
     %     img:  images (as 2D array) 
     %     level:  number between 0 and 1  (0.5 = median) 
     
-     v= img(:); % turn image into column vector
-     a = min(v); % calculate minimum pixel intensity 
-     b = max(v);  % calculate maximum pixel intensity 
+      % turn image into column vector
+     a = min(min(img)); % calculate minimum pixel intensity 
+     b = max(max(img));  % calculate maximum pixel intensity 
      [ny,nx]=size(img);  % ny=number of rows (y-coords); nx = number of cols (x-coords)
      newImg=zeros(ny,nx); % allocate space for newImg
      
@@ -17,10 +17,12 @@ function newImg = threshold(img,percentile)
      %   For example if A = [1,2,3;  2.1 ,5 , 7 ] 
      %     then calling newImg = threshold(A,0.2)  should produce 
      %       [0,0,1; 0,1,1];      
-     %   This is because the 20th percentil is 2.2 
+     %   This is because the 20th percentile is 2.2 
      % 
-      
-    
+     r = b-a;
+     p = (percentile)*r+a;
+     newImg=(img>=p);
+     %newImg=newImge(:);
      
 
 

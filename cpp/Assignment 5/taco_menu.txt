@@ -1,16 +1,30 @@
-Beef_Taco ENTREE 2.49
-Chicken_Taco ENTREE 2.49
-Bean_Burrito ENTREE 1.99
-Nachos ENTREE 4.49
-Rice_and_Beans ENTREE 2.99
-Mt_Dew DRINK 2.49
-Pepsi DRINK 2.49
-Root_Beer DRINK 2.49
-Ginger_Ale DRINK 2.49
-Sprite DRINK 2.49
-Coke DRINK 2.49
-Water DRINK 0.0
-Bottle_Water DRINK 1.00
-Churro DESSERT 1.49
-Dessert_Pizza DESSERT .99
-
+Taco 
+0 1.25
+Pop 
+1 1.50
+Churro 
+2 0.99
+Beef Burrito
+0 2.99
+Iced Tea
+1 1.25
+Apple Grande
+2 2.49
+Soft-Shelled Taco
+0 1.49
+Bean Burrito
+0 1.49
+Lemonade 
+2 1.25
+Steak Fajita 
+0 4.50
+Nachos Supreme
+0 5.25
+Choco-Taco
+2 1.75
+Bottled Water
+1 1.99
+Empanada 
+2 2.25
+Chicken Fajita 
+0 3.75
