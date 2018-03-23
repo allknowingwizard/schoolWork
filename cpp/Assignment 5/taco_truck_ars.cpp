@@ -142,6 +142,7 @@ int main() {
 							}
 							calcTotalBill(results, val, revenue); // calculate the bill for the valid items
 							cout << "Total Revenue for " << ITEM_TYPES[iIn-1] << ": " << revenue.total << endl; // display result
+							val = 1; // reset menu and exit loop
 						} else {
 							cout << "Not a valid option. Please try again.\n"; // prompt for retry
 						}
@@ -213,9 +214,9 @@ void printBill(MenuItem menu[], vector<MenuItem> &bill, bool finalSale) {
 		 << "\nTotal /w 15% Tip: $" << (check.total+check.tax+check.tip) << endl;
 	
 	if(finalSale) { // if final, clear selection and thank user
-		cout << "\n--------------------------------------------------\n"
+		cout << "\n--------------------------------------------------\n";
 		cout << "Thank You for your patronage. Have a nice day!";
-		cout << "\n--------------------------------------------------\n"
+		cout << "\n--------------------------------------------------\n";
 		bill = {}; // reset bill
 	}
 }
