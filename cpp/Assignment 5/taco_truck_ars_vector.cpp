@@ -15,7 +15,6 @@ using namespace std;
 enum ItemType {ENTREE, DRINK, DESSERT, NUM_TYPES};
 
 const string ITEM_TYPES[] = {"ENTREE", "DRINK", "DESSERT", "Please Select a Type"};
-const int MENU_SIZE = 15;
 const string INVALID = "Not a valid option. Please try again.\n";
 const string BAR = "----------------------------------------------";
 
@@ -24,21 +23,21 @@ struct Check {float total; float tax; float tip;};
 
 int printMenu(const string[], int, string &); // prints the given menu to the screen, with n options, and prompts the user using string[n],
 											  // stores input in string, returns {-1=invalid, 0=string, 1=int}
-int readMenuItemsFromFile(MenuItem []); //reads the menuitems from the file taco_menu.txt and stores them in the given array
-void printItemInfoByType(MenuItem [], ItemType); // menu option 1 - prints the item info of all the items matching the given itemtype
+int readMenuItemsFromFile(vector<MenuItem> &); //reads the menuitems from the file taco_menu.txt and stores them in the given array
+void printItemInfoByType(vector<MenuItem>, ItemType); // menu option 1 - prints the item info of all the items matching the given itemtype
 void printItemInfo(MenuItem, bool, bool, bool); // prints the info of the given menuitem, full cost or unit cost may be printed
 												//only prints itemType and qty if specified
 void addItemToBill(vector<MenuItem> &, MenuItem); //asks user for quantity and adds the given item(s) to the vector
-int searchItems(MenuItem[], MenuItem[], string);//searches the first array for the given string and fills the second array with
+int searchItems(vector<MenuItem>, MenuItem[], string);//searches the first array for the given string and fills the second array with
 												//the results, returns the quantity of items stored in results
-void printTotalCost(MenuItem[]); // prints the total cost of the items in the array
-void printBill(MenuItem[], vector<MenuItem> &, bool); //prints the bill, if final fills array with revenue logs and clears bill
-void printTotalByType(MenuItem[], ItemType); // calculates the total cumulative sales of the given item type
-void calcTotalBill(MenuItem[], int, Check &); // calculates the total cost and tax/tip of items in the array and fill the Check with it
-void sortMenu(MenuItem []); // selection sorts the menu by itemType {entrees, drinks, desserts}
+void printTotalCost(vector<MenuItem>); // prints the total cost of the items in the array
+void printBill(vector<MenuItem> &, vector<MenuItem> &, bool); //prints the bill, if final fills array with revenue logs and clears bill
+void printTotalByType(vector<MenuItem>, ItemType); // calculates the total cumulative sales of the given item type
+void calcTotalBill(MenuItem [], int, Check &); // calculates the total cost and tax/tip of items in the array and fill the Check with it
+void sortMenu(vector<MenuItem> &); // selection sorts the menu by itemType {entrees, drinks, desserts}
 
 int main() {
-	MenuItem menu[MENU_SIZE];//the available food items, stores amount sold in qty
+	vector<MenuItem> menu;//the available food items, stores amount sold in qty
 	vector<MenuItem> bill;//the currently selected items to be purchased, stores amount selected in qty
 	int x = readMenuItemsFromFile(menu); // loads in the menu from the file
 	if(x == -1) { // file read failed
@@ -67,8 +66,8 @@ int main() {
 		iIn = stoi(input); // get numerical input
 
 		//pre-initialzation to avoid cross initialization of future switch-case
-		string itemNames[MENU_SIZE+1] = {};
-		MenuItem results[MENU_SIZE] = {};
+		string itemNames[menu.size()+1] = {};
+		MenuItem results[menu.size()] = {};
 		bool adding = true;
 		ItemType queryType;
 		Check revenue;
@@ -100,18 +99,18 @@ int main() {
 				switch(iIn) { // addItemMenu input
 					case 1: // add by number
 						
-						for(int i = 0; i < MENU_SIZE; i++) { // loop through every menu item
+						for(int i = 0; i < menu.size(); i++) { // loop through every menu item
 							itemNames[i] = menu[i].name; // fill itemNames with the names
 						}
-						itemNames[MENU_SIZE] = "Enter the Item Number to Add (-1 to return)"; // add user prompt
+						itemNames[menu.size()] = "Enter the Item Number to Add (-1 to return)"; // add user prompt
 						adding = true; // loop this menu until they enter -1
 						while(val != 1 || adding) { // still adding food to selection, or failed to enter valid option
-							val = printMenu(itemNames, MENU_SIZE, input); // display item options and prompt for input
+							val = printMenu(itemNames, menu.size(), input); // display item options and prompt for input
 							if(val == 1) { // valid input
 								iIn = stoi(input); // convert to int
 								if(iIn == -1) { // -1 to quit
 									adding = false;// quit
-								} else if(iIn > 0 && iIn < MENU_SIZE) { // if valid range
+								} else if(iIn > 0 && iIn < menu.size()) { // if valid range
 									addItemToBill(bill, menu[iIn-1]); // add the item to the bill
 								} else {
 									cout << INVALID; // prompt for retry
@@ -205,7 +204,7 @@ int main() {
 						if(iIn > 0 && iIn < 4) { // validate range
 							queryType = static_cast<ItemType>(iIn-1); // cast input to ItemType
 							val = 0; // using val to count the number of results to save memory
-							for(int i = 0; i < MENU_SIZE; i++) { // loop through available items
+							for(int i = 0; i < menu.size(); i++) { // loop through available items
 								if(menu[i].type == queryType && menu[i].qty > 0) { // if itemType equals search type and quantity is greater than 0
 									results[val] = menu[i]; // reuse existing array to save memory
 									val++; // increase result counter
@@ -258,30 +257,29 @@ int main() {
 	return 0;
 }
 
-void sortMenu(MenuItem menu[]) { // selection sort
+void sortMenu(vector<MenuItem> &menu) { // selection sort
 	int min; // minimum variable
  
    	//loop through the menu
-    for (int i = 0; i < MENU_SIZE - 1; i++)
+    for (int i = 0; i < menu.size() - 1; i++)
     {
         
         min = i; // find the minumum
-        for (int j = i+1; j < MENU_SIZE; j++)
+        for (int j = i+1; j < menu.size(); j++)
           if (menu[j].type < menu[min].type) // by type
             min = j; 
  
-        
         MenuItem temp = menu[i];
 		menu[i] = menu[min]; // swap elements 
 		menu[min] = temp;
     }
 }
 
-int searchItems(MenuItem menu[], MenuItem results[], string query) {
+int searchItems(vector<MenuItem> menu, MenuItem results[], string query) {
 	int res = 0; // how many results
 	int pos = string::npos; // where is the match
 	string lowcName = "";
-	for (int i = 0; i < MENU_SIZE; i++) { // loop through the items
+	for (int i = 0; i < menu.size(); i++) { // loop through the items
 		for(int j = 0;j < menu[i].name.length(); j++) {
 			lowcName += tolower(menu[i].name[j]); // get the lowercase name of the item
 		}
@@ -338,7 +336,7 @@ void calcTotalBill(MenuItem bill[], int size, Check &check) {
 	check.tip = check.total * 0.15; // calc tip
 }
 
-void printBill(MenuItem menu[], vector<MenuItem> &bill, bool finalSale) {
+void printBill(vector<MenuItem> &menu, vector<MenuItem> &bill, bool finalSale) {
 	Check check; // temp check
 	cout << "\n\n";
 	calcTotalBill(&(bill[0]), static_cast<int>(bill.size()), check); // calc bill using temp check and vector
@@ -346,7 +344,7 @@ void printBill(MenuItem menu[], vector<MenuItem> &bill, bool finalSale) {
 		if(bill[i].qty > 0)
 			printItemInfo(bill[i], true, true, true); // print the item info
 		if(finalSale) { // if the sale is final
-			for(int j = 0; j < MENU_SIZE; j++) { // loop through menu items
+			for(int j = 0; j < menu.size(); j++) { // loop through menu items
 				if(bill[i].name == menu[j].name) { // and increment qty for revenue
 					menu[j].qty += bill[i].qty; // add the new quantites of items to the revenue log 
 				}
@@ -366,9 +364,9 @@ void printBill(MenuItem menu[], vector<MenuItem> &bill, bool finalSale) {
 	}
 }
 
-void printItemInfoByType(MenuItem menu[], ItemType itemType) {
+void printItemInfoByType(vector<MenuItem> menu, ItemType itemType) {
 	MenuItem mi; // temp menuItem
-	for(int i = 0; i < MENU_SIZE; i++) { // loop through menu
+	for(int i = 0; i < menu.size(); i++) { // loop through menu
 		if(menu[i].type == itemType) { // if the type is correct
 			cout << right << setw(2) << i+1 << ": "; // print the item info
 			printItemInfo(menu[i], false, false, false);
@@ -389,7 +387,7 @@ void printItemInfo(MenuItem mi, bool fullCost, bool printType, bool printQty) {
 	cout << endl; 
 }
 
-int readMenuItemsFromFile(MenuItem menuItem[MENU_SIZE]) {
+int readMenuItemsFromFile(vector<MenuItem> &menuItem) {
 	ifstream file;
 	file.open("taco_menu.txt");// open the file
 	if(file.fail()) { // if it fails, return escape value
@@ -405,7 +403,7 @@ int readMenuItemsFromFile(MenuItem menuItem[MENU_SIZE]) {
 			type(0-2) cost	*/
 		while(getline(file, i.name) && file >> iType && file >> i.cost) {
 			i.type = static_cast<ItemType>(iType); // cast the type number
-			menuItem[iter] = i; // store the menu
+			menuItem.push_back(i); // store the menu
 			iter++; // increase iteration
 			file.ignore(); // ignore the newline left by extraction op
 		}

@@ -1,8 +1,8 @@
-Taco 
+Taco
 0 1.25
-Pop 
+Pop
 1 1.50
-Churro 
+Churro
 2 0.99
 Beef Burrito
 0 2.99
@@ -14,9 +14,9 @@ Soft-Shelled Taco
 0 1.49
 Bean Burrito
 0 1.49
-Lemonade 
-2 1.25
-Steak Fajita 
+Lemonade
+1 1.25
+Steak Fajita
 0 4.50
 Nachos Supreme
 0 5.25
@@ -24,7 +24,7 @@ Choco-Taco
 2 1.75
 Bottled Water
 1 1.99
-Empanada 
+Empanada
 2 2.25
-Chicken Fajita 
+Chicken Fajita
 0 3.75
