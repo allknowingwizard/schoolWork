@@ -1,7 +1,13 @@
+/*
+	Adam Stammer
+	CS 250 H, SDSU
+	April 2nd, 2018
+*/
 #include <iostream>
 #include <iomanip>
 #include <string>
 #include <fstream>
+#include <cstring>
 
 using namespace std;
 
@@ -23,6 +29,7 @@ void displayStockValue(fstream &); // calculates the monetary value of all on ha
 int displayPrompt(const string[], int, string &); // displays the contents of the array, of the given size, as a menu and prompts user for input stored in string
 										  // returns value based on input type (0 => string, 1 => int, -1 => combo or failure)
 void clearFile(fstream &); // clears the content of the file; destroys the stock record
+void searchFlavours(fstream &);
 
 
 class Logger { // experimenting with "static classes", I may add file based logging to this later
@@ -98,7 +105,9 @@ void modifyItem(fstream &file, bool newF) {
 	if(!newF) {
 		cout << "Leave empty to remain unchanged.";
 		file.read(reinterpret_cast<char*>(&tempFlav), sizeof(IceCream));///////////////////////////////////////////////////////////////
-		file.seekg(file.tellg(), ios::beg); // back up one item (the one you just read)
+		file.seekg(file.tellg() - static_cast<long long>(sizeof(IceCream)), ios::beg); // back up one item (the one you just read)
+	} else {
+		file.seekg(0L, ios::end);
 	}
 	cout << endl;
 	string flavour[] = {"Flavour Name"};
@@ -106,8 +115,8 @@ void modifyItem(fstream &file, bool newF) {
 	int value = -1;
 	while(!(value == 0 || value == -2)) { // wait for string or empty input
 		value = displayPrompt(flavour, 0, input);
-		if(value == -2) { // don't change the name
-			
+		if(value == 0) { // don't change the name
+			strstr(tempFlav.flavour, input.c_str());
 		}
 	}
 }
