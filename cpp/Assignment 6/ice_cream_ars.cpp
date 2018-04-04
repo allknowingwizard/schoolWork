@@ -60,13 +60,13 @@ int main() {
 	int value = -1;
 	while(value != 1) {// until the user enters a number
 		value = displayPrompt(mainMenu, 6, input);
-		if(value == 1 && stoi(input) < 6 && stoi(value) > 0) { // valid integer input
+		if(value == 1 && stoi(input) < 7 && stoi(input) > 0) { // valid integer input
 			switch(stoi(input)) {
 				case 1: // add a flavour
 					modifyItem(file, true);
 					break;
 				case 2: // list available flavours
-
+					listFlavours(file);
 					break;
 				case 3: // search flavours
 
