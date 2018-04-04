@@ -47,18 +47,21 @@ class Logger { // experimenting with "static classes", I may add file based logg
 };
 
 int main() {
-	string fileName = "inventory.dat";
+	string fileName = "ice_cream.dat";
 	fstream file("inventory.dat", ios::out | ios::app | ios::binary);
 	if(!file) {
 		Logger::log(Logger::ERROR, "Filed to open " + fileName + ". Closing...");
 		return -1;
 	}
+	cout << sizeof(file.tellg()) << endl;
+	cout << sizeof(long long) << endl;
+	cout << sizeof(long) << endl;
 	string input = "";
 	int value = -1;
 	while(value != 1) {// until the user enters a number
 		value = displayPrompt(mainMenu, 6, input);
-		if(value == 1 && value < 6 && value > 0) { // valid integer input
-			switch(value) {
+		if(value == 1 && stoi(input) < 6 && stoi(value) > 0) { // valid integer input
+			switch(stoi(input)) {
 				case 1: // add a flavour
 					modifyItem(file, true);
 					break;
@@ -105,7 +108,7 @@ void modifyItem(fstream &file, bool newF) {
 	if(!newF) {
 		cout << "Leave empty to remain unchanged.";
 		file.read(reinterpret_cast<char*>(&tempFlav), sizeof(IceCream));///////////////////////////////////////////////////////////////
-		file.seekg(file.tellg() - static_cast<long long>(sizeof(IceCream)), ios::beg); // back up one item (the one you just read)
+		file.seekg(ios::cur - /*static_cast<long long>(*/sizeof(IceCream)/*)*/, ios::beg); // back up one item (the one you just read)
 	} else {
 		file.seekg(0L, ios::end);
 	}
