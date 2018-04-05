@@ -15,6 +15,7 @@ const int NAME_SIZE = 51;
 const string mainMenu[] = {"Add a Flavour", "List Available Flavours", "Search Flavours", "Calculate Stock Value", "Clear Inventory Record", "Exit", "Please Select an Option"};
 const string levelNames[] = {"DEBUG", "WARNING", "ERROR"};
 const string IN_ERROR = "That is not a valid option. Please try again.\n";
+const bool DEBUG = true;
 
 struct IceCream {
 	char flavour[NAME_SIZE];
@@ -22,14 +23,15 @@ struct IceCream {
 	float price;
 };
 
-void displayFlavourData(fstream &); // reads the next IceCream data from the file and prints it on screen
+void displayFlavourData(IceCream &); // reads the next IceCream data from the file and prints it on screen
 void modifyItem(fstream &, bool); // modifies the next IceCream item in the file if bool if false, otherwise appends a new IceCream item
 void listFlavours(fstream &); // reads all of the IceCream items from the file and prints the data on the screen
 void displayStockValue(fstream &); // calculates the monetary value of all on hand IceCream and prints it to the screen
 int displayPrompt(const string[], int, string &); // displays the contents of the array, of the given size, as a menu and prompts user for input stored in string
 										  // returns value based on input type (0 => string, 1 => int, -1 => combo or failure)
-void clearFile(fstream &); // clears the content of the file; destroys the stock record
-void searchFlavours(fstream &);
+void clearFile(fstream &, string); // clears the content of the file; destroys the stock record
+void searchFlavours(fstream &); // prompts the user for an item search
+void showStreamState(fstream &);
 
 
 class Logger { // experimenting with "static classes", I may add file based logging to this later
@@ -39,7 +41,7 @@ class Logger { // experimenting with "static classes", I may add file based logg
 		};
 		static const LEVEL threshold = ERROR;
 		static void log(int warningLevel, string message) {
-			if(warningLevel <= threshold)
+			if(warningLevel <= threshold && DEBUG)
 				cout << levelNames[warningLevel] << ": " << message << endl;
 		}
 	private:
@@ -48,14 +50,11 @@ class Logger { // experimenting with "static classes", I may add file based logg
 
 int main() {
 	string fileName = "ice_cream.dat";
-	fstream file("inventory.dat", ios::out | ios::app | ios::binary);
+	fstream file(fileName.c_str(), ios::out | ios::in | ios::app | ios::binary);
 	if(!file) {
 		Logger::log(Logger::ERROR, "Filed to open " + fileName + ". Closing...");
 		return -1;
 	}
-	cout << sizeof(file.tellg()) << endl;
-	cout << sizeof(long long) << endl;
-	cout << sizeof(long) << endl;
 	string input = "";
 	int value = -1;
 	while(value != 1) {// until the user enters a number
@@ -69,42 +68,40 @@ int main() {
 					listFlavours(file);
 					break;
 				case 3: // search flavours
-
+					searchFlavours(file);
 					break;
 				case 4: // calculate stock values
-
+					displayStockValue(file);
 					break;
 				case 5: // clear inventory record
-
+					clearFile(file, fileName);
 					break;
 				case 6: // exit
 					cout << "Have a nice day!" << endl;
+					file.close();
 					return 0;
 					break;
 			}
+			value = -5;
 		} else { // invalid option
-			Logger::log(Logger::ERROR, "Invalid Option: " + value);
 			cout << IN_ERROR;
 		}
+		value = -5;
 	}
 
 	return 0;
 }
 
-void displayFlavourData(fstream &file) {
-	IceCream tempFlav;
-	file.read(reinterpret_cast<char*>(&file), sizeof(IceCream));
-	if(!file.fail()) {
+void displayFlavourData(IceCream &tempFlav) {
 		cout << "--------------------------------------------------------\n"; // and print the info
 		cout << "Flavour: " << tempFlav.flavour << endl;
 		cout << "Quantity Available: " << tempFlav.quantity << endl;
-		cout << "Price: $" << setprecision(2) << tempFlav.price << endl;
-	}
+		cout << "Price: $" << fixed << setprecision(2) << tempFlav.price << endl;
 }
 
 void modifyItem(fstream &file, bool newF) {
 	cout << "Please Enter the Information.";
-	IceCream tempFlav = {};
+	IceCream tempFlav = {"", 0, 0};
 	if(!newF) {
 		cout << "Leave empty to remain unchanged.";
 		file.read(reinterpret_cast<char*>(&tempFlav), sizeof(IceCream));///////////////////////////////////////////////////////////////
@@ -114,25 +111,58 @@ void modifyItem(fstream &file, bool newF) {
 	}
 	cout << endl;
 	string flavour[] = {"Flavour Name"};
+	string quantity[] = {"Quantity (lbs.)"};
+	string price[] = {"Price"};
 	string input = "";
 	int value = -1;
 	while(!(value == 0 || value == -2)) { // wait for string or empty input
 		value = displayPrompt(flavour, 0, input);
-		if(value == 0) { // don't change the name
-			strstr(tempFlav.flavour, input.c_str());
+		if(value == 0) { //  change the name
+			strcpy(tempFlav.flavour, input.c_str());
 		}
 	}
+	value = -5; // reset for continued input
+	while(!(value == 1 || value == -2)) { // wait for int or empty input
+		value = displayPrompt(quantity, 0, input);
+		if(value == 1) { // change the qty
+			tempFlav.quantity = stof(input);
+		}
+	}
+	value = -5; // reset for continued input
+	while(!(value == 1 || value == -2)) { // wait for int or empty input
+		value = displayPrompt(price, 0, input);
+		if(value == 1) { // change the price
+			tempFlav.price = stof(input);
+		}
+	}
+	value = -5; // reset for continued input
+//	if(tempFlav != {"", 0, 0}) { // make sure there is information
+		file.write(reinterpret_cast<char *>(&tempFlav), sizeof(IceCream));
+//	}
 }
 
 void listFlavours(fstream &file) {
-	file.seekg(0L, ios::beg); // start reading from the beginning
-	while(!(file.eof())) { // read all of the flavor data
-		displayFlavourData(file);
+	file.seekg(0, ios::beg); // start reading from the beginning
+	showStreamState(file);
+	IceCream tempFlav = {"TestFlavour", 0, 0};
+	while(file.read(reinterpret_cast<char *>(&tempFlav), sizeof(IceCream))) { // read all of the flavor data
+		displayFlavourData(tempFlav);
 	}
+	file.clear();
 }
 
-void displayStockValue(fstream &) {
-
+void displayStockValue(fstream &file) {
+	file.seekg(0, ios::beg); // reset to the beginning of the file
+	IceCream temp = {"", 0, 0};
+	float stockValue = 0;
+	float flavourValue = 0;
+	while(file.read(reinterpret_cast<char *>(&temp), sizeof(IceCream))) {
+		flavourValue = (temp.price * temp.quantity);
+		cout << temp.flavour << ": $" << setprecision(2) << flavourValue << endl;
+		stockValue += flavourValue;
+	}
+	cout << "Total: $" << setprecision(2) << stockValue << endl;
+	
 }
 
 int displayPrompt(const string options[], int nOptions, string &input) {
@@ -161,4 +191,22 @@ int displayPrompt(const string options[], int nOptions, string &input) {
 	return -1; // both or neither
 }
 
+void searchFlavours(fstream &file) {
 
+}
+
+void showStreamState(fstream &file) {
+	cout << "EOF: " << file.eof() << endl;
+	cout << "Good: " << file.good() << endl;
+	cout << "fail: " << file.fail() << endl;
+	cout << "bad: " << file.bad() << endl;
+}
+
+void clearFile(fstream &file, string fileName) {
+	file.close();
+	file.open(fileName.c_str(), ios::out | ios::binary);
+	file.close();
+	file.open(fileName.c_str(), ios::out | ios::in | ios::app | ios::binary);
+	if(DEBUG)
+		showStreamState(file);
+}
