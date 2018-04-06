@@ -12,8 +12,8 @@
 using namespace std;
 
 const int NAME_SIZE = 51;
-const string mainMenu[] = {"Add a Flavour", "List Available Flavours", "Search Flavours", "Calculate Stock Value", "Clear Inventory Record", "Exit", "Please Select an Option"};
-const string levelNames[] = {"DEBUG", "WARNING", "ERROR"};
+const string mainMenu[] = {"Add a Flavour", "List Available Flavours", "Search Flavours", "Calculate Stock Value", "Modify Existing Item", "Clear Inventory Record", "Exit", "Please Select an Option"};
+const string levelNames[] = {"RUNTIME", "DEBUG", "WARNING", "ERROR"};
 const string IN_ERROR = "That is not a valid option. Please try again.\n";
 const bool DEBUG = true;
 
@@ -22,6 +22,8 @@ struct IceCream {
 	float quantity;
 	float price;
 };
+
+enum MENU_OPTION {ADD=1, LIST, SEARCH, TOTAL, MODIFY, CLEAR, EXIT, COUNT_P1};
 
 void displayFlavourData(IceCream &); // reads the next IceCream data from the file and prints it on screen
 void modifyItem(fstream &, bool); // modifies the next IceCream item in the file if bool if false, otherwise appends a new IceCream item
@@ -37,7 +39,7 @@ void showStreamState(fstream &);
 class Logger { // experimenting with "static classes", I may add file based logging to this later
 	public:
 		enum LEVEL {
-			DEBUG, WARNING, ERROR, SIZE
+			RUNTIME, DEBUG, WARNING, ERROR, SIZE
 		};
 		static const LEVEL threshold = ERROR;
 		static void log(int warningLevel, string message) {
@@ -50,7 +52,15 @@ class Logger { // experimenting with "static classes", I may add file based logg
 
 int main() {
 	string fileName = "ice_cream.dat";
-	fstream file(fileName.c_str(), ios::out | ios::in | ios::app | ios::binary);
+	fstream file(fileName.c_str(), ios::in | ios::binary);
+	if(!file) {
+		file.close();
+		file.open(fileName.c_str(), ios::out | ios::binary);
+	}
+	file.close();
+	file.open(fileName.c_str(), ios::out | ios::in | ios::binary);
+
+
 	if(!file) {
 		Logger::log(Logger::ERROR, "Filed to open " + fileName + ". Closing...");
 		return -1;
@@ -58,25 +68,28 @@ int main() {
 	string input = "";
 	int value = -1;
 	while(value != 1) {// until the user enters a number
-		value = displayPrompt(mainMenu, 6, input);
-		if(value == 1 && stoi(input) < 7 && stoi(input) > 0) { // valid integer input
+		value = displayPrompt(mainMenu, 7, input);
+		if(value == 1 && stoi(input) < 8 && stoi(input) > 0) { // valid integer input
 			switch(stoi(input)) {
-				case 1: // add a flavour
+				case ADD: // add a flavour
 					modifyItem(file, true);
 					break;
-				case 2: // list available flavours
+				case LIST: // list available flavours
 					listFlavours(file);
 					break;
-				case 3: // search flavours
+				case SEARCH: // search flavours
 					searchFlavours(file);
 					break;
-				case 4: // calculate stock values
+				case TOTAL: // calculate stock values
 					displayStockValue(file);
 					break;
-				case 5: // clear inventory record
+				case MODIFY:
+					modifyItem(file, false);
+					break;
+				case CLEAR: // clear inventory record
 					clearFile(file, fileName);
 					break;
-				case 6: // exit
+				case EXIT: // exit
 					cout << "Have a nice day!" << endl;
 					file.close();
 					return 0;
@@ -101,13 +114,15 @@ void displayFlavourData(IceCream &tempFlav) {
 
 void modifyItem(fstream &file, bool newF) {
 	cout << "Please Enter the Information.";
+	file.seekp(0, ios::beg);
+	file.seekg(0, ios::beg);
 	IceCream tempFlav = {"", 0, 0};
 	if(!newF) {
 		cout << "Leave empty to remain unchanged.";
 		file.read(reinterpret_cast<char*>(&tempFlav), sizeof(IceCream));///////////////////////////////////////////////////////////////
-		file.seekg(ios::cur - /*static_cast<long long>(*/sizeof(IceCream)/*)*/, ios::beg); // back up one item (the one you just read)
+		file.seekg(-sizeof(IceCream), ios::cur); // back up one item (the one you just read)
 	} else {
-		file.seekg(0L, ios::end);
+		//file.seekg(0L, ios::end);
 	}
 	cout << endl;
 	string flavour[] = {"Flavour Name"};
@@ -192,7 +207,19 @@ int displayPrompt(const string options[], int nOptions, string &input) {
 }
 
 void searchFlavours(fstream &file) {
-
+/*
+	string promptQuery[] = {"Enter a search term"};
+	int val = -5;
+	string input = "";
+	while (val != 0) {
+		val = displayPrompt(promptQuery, 0, input);
+		if(val == 0) {
+			while
+		} else {
+			cout << IN_ERROR; // wrong data type
+		}
+	}
+*/
 }
 
 void showStreamState(fstream &file) {
