@@ -49,8 +49,12 @@ void NumArray::sortAscend() {
 float NumArray::findMedian() {
     if(!sorted())
         sortAscend();
-    int mid = size() / 2;
-    return pNumbers[mid];
+    int mid = (size() / 2) - 1;
+    if(size() % 2 == 1) // it is odd, there is a middle index
+        return pNumbers[mid];
+    float sum = 0;
+    sum += pNumbers[mid] + pNumbers[mid + 1];
+    return sum / 2;
 }
 
 void NumArray::printData() {
