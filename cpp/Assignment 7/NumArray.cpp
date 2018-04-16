@@ -11,7 +11,6 @@ NumArray::NumArray(int size) {
     bSorted = false;
     pNumbers = new int[iSize];
 }
-
 NumArray::NumArray(NumArray &num) {
     iSize = num.size();
     bSorted = num.sorted();

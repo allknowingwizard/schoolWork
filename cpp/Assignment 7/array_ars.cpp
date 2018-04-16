@@ -32,7 +32,12 @@ int main() {
     cout << setw((lines.length() / 2) + 3) << right << "Copied\n";
     cout << lines;
     NumArray num2(num);
+	cout << "num 2 before:"  << endl;
     num2.printData();
-
+    num2.setItem(1, 8008);
+	cout << "num 2 after:" << endl;
+    num2.printData();
+	cout << "num 1 after:" << endl;
+    num.printData();
     return 0;
 }
