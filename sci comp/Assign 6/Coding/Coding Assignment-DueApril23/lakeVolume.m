@@ -1,4 +1,4 @@
-function [approxVolume,approxArea,averageDepth,hits]=lakeVolume(maxIters)
+function [approxVolume,approxArea,averageDepth]=lakeVolume(maxIters)
    % Example Use:  [vol,area,depth]=lakeVolume(1000);   
    %                v=lakeVolume(100000);   <-- returns volume only
    
@@ -46,15 +46,19 @@ function [approxVolume,approxArea,averageDepth,hits]=lakeVolume(maxIters)
      s = depth(xr, yr, A);
      depthSum += s;
      %fprintf('s:  %5.2f      Depthsum: %f   \n',s, depthSum);
-     if(s != 0)
-       hits++;
+     if(s > 0)
+       hits += 1;
+       %printf("hit: %f\n", s);
      end
    end
-   
-   approxArea = hits * 64;
-   averageDepth = (depthSum / maxIters);
+   %printf("hits: %f\n", hits);
+   approxArea = (hits/maxIters) * 64.0;
+   averageDepth = (depthSum / hits);
    approxVolume = (averageDepth * approxArea);
    
+   %printf("Aprox Area: %f\n", approxArea);
+   %printf("Avg Depth : %f\n", averageDepth);
+   %printf("Aprox Volu: %f\n", approxVolume);
    
    % END WORK HERE 
    

@@ -13,9 +13,9 @@ class NumArray {
         NumArray(NumArray &); // copies the information from a passed NumArray
         ~NumArray(); // deletes the allocated array
 
-        void setItem(int loc, float value) { if(loc < iSize) pNumbers[loc] = value;} // set the data at the given
+        void setItem(int loc, float value); // set the data at the given
                             // location to the given value
-        float getItem(int loc) { if(loc < iSize) return pNumbers[loc]; else return -1; } // reads the data at
+        float getItem(int loc); // reads the data at
                             // the given location and returns it. If it doesn't exist, -1 is returned
         bool sorted() {return bSorted;} //returns the sort status of the array
         int size() {return iSize;} // returns the size of the array
