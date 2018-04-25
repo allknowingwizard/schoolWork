@@ -9,6 +9,7 @@ function [s,maxDrift] = biasedWalk(x,y,alpha,maxSteps)
    %    maxDrift:   Farthest distance from home walker ever gets to. 
    s=-1; % set to failure initially 
    maxDrift=abs(x)+abs(y); 
+	weight = [1, 1, 1, 1];
    
    for k=1:maxSteps 
      % do biased random walk on an open universe   
@@ -20,10 +21,15 @@ function [s,maxDrift] = biasedWalk(x,y,alpha,maxSteps)
       %    Convert weights to probabilities.
       %    draw random number between 0 and 1.
       %    decide on which move to make and make the move!
-   
-     
-     
-     
+     	if x == 0 && y == 0
+		break;
+	endif
+	if(x < 0)
+		
+     	endif
+     	
+     	
+     	
      
      
      % check to see if home is reached
