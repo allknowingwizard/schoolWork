@@ -1,6 +1,6 @@
 function prob = gambTest(maxIters)
   doubles = 0;
-  money = 1000;
+  money = 10000;
   initBet = 5;
   winProb = 0.4929;
   for k=1:maxIters
