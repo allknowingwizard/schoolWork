@@ -1,8 +1,8 @@
 function []=testRng(seed, iters)
 
-m = 2^31;
-a = 2^16+3;
-b = 7;
+m = 2^31-1;
+a = 7^5;
+b = 0;
 
 myrng = @(x) mod(a*x + b, m);
 
