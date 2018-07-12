@@ -5,7 +5,7 @@ function prob = testBW(maxIters)
   hits = 0;
   
   for k=1:maxIters
-    s = biasedWalk(20,0,1.1,5000);
+    s = biasedWalk(20,0,1.5,500);
     if(s != -1)
       hits++;
       if(s < fastest)
