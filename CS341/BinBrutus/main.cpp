@@ -9,7 +9,7 @@ void incBinStr(char* s, int len) { // counts up in binary
         if(s[x] == '0') { // find the first zero from the right
             s[x] = '1'; // turn it into a zero
             if(x < len) { // if it's not the last character (on the right)
-                for(int y = x+1; y < len-1; y++) { // loop through all of the characters to the right
+                for(int y = x+1; y < len; y++) { // loop through all of the characters to the right
                     s[y] = '0'; // and zero them out
                 }
             }
@@ -26,6 +26,7 @@ int main() {
     for(int i = 0; i < bitCount; i++) { // zero out the string
         str[i] = '0';
     }
+    str[bitCount] = '\0';
     cout << str << '\n'; // print it out zero string
     int iterMax = pow(2, bitCount); // find the amount of total combinations
     for(int i = 0; i < iterMax - 1; i++) {// loop through each possibility except the zero case printed above
