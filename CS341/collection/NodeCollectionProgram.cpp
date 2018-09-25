@@ -1,100 +1,94 @@
 /*
     Adam Stammer    
-    CS250H
-    Assignment 8 & 9
-    Linked List Storing Characters
+    CS381
+    Assignment 0 - mean/median
+    9/20/2018
 */
 
 #include <iostream>
-#include <iomanip>
-// #include "NodeCollection.h"
-#include <cstring>
 #include <fstream>
 #include <vector>
 #include <algorithm>
+#include <cmath>
 
 using namespace std;
 
 void readData(ifstream &ifstr, vector<int> &v) {
-    ifstr.open("input.dat");
-    if(!ifstr) {
-        cout << "Unable to open file\n";
+    ifstr.open("input.dat"); // open the data file
+    if(!ifstr) { // make sure it succeeds at opening, exit on fail
+        cout << "Unable to open file\n"; 
         exit(1);
     }
     int inVal = -1;
-    while ((ifstr >> inVal)) {
+    while ((ifstr >> inVal)) { // read in data and store it in the vector
         v.push_back(inVal);
     }
 }
 
-void sortData(vector<int> data, vector<int> &dataA, vector<int> &dataB) {
-    // int i, j, min_idx;
- 
-    // // One by one move boundary of unsorted subarray
-    // for (i = 0; i < data.size()-1; i++)
-    // {
-    //     // Find the minimum element in unsorted array
-    //     min_idx = i;
-    //     for (j = i+1; j < data.size(); j++)
-    //       if (data[j] < data[min_idx])
-    //         min_idx = j;
- 
-    //     // Swap the found minimum element with the first element
-    //     swap(&arr[min_idx], &arr[i]);
-    // }
-}
-
-void printData(vector<int> v) {
+void printData(vector<int> v) { // print out all elements of the vector
     for(int i = 0; i < v.size(); i++) {
         cout << v[i] << '\n';
     }
 }
 
-void printMenu() {
-    cout << "1. Display Raw Data\n";
-    cout << "2. Display Ascending\n";
-    cout << "3. Display Descending\n";
-    cout << "4. Display Mean and Median\n";
-    cout << "5. Quit\n";
+void printMenu() { // display the menu options
+    cout << "\t1. Display Raw Data\n";
+    cout << "\t2. Display Ascending\n";
+    cout << "\t3. Display Descending\n";
+    cout << "\t4. Display Mean and Median\n";
+    cout << "\t5. Quit\n\t";
 }
 void copyVector(vector<int> &v, vector<int> &w) {
-    for(int i = 0; i < v.size(); i++) {
+    for(int i = 0; i < v.size(); i++) { // loop through the vector values and copy them over to the other vector
         w.push_back(v[i]);
     }
 }
 void printMenMed(vector<int> v) {
-    
+    float men = 0; // use as sum variable too
+    float med = -1; // default median value
+    for(int i = 0; i < v.size(); i++) {
+        men+=v[i]; // use the men variable to calculate the sum
+    }
+    men /= v.size(); // calculate the average
+    if(v.size() % 2 == 0) { // even size (no middle)
+        int mid = floor(v.size()/2.0) - 1; // find bottom of the middle
+        med = (v[mid] + v[mid+1]) / 2.0;
+    } else {
+        med = v[(v.size() / 2)-1]; // middle value if size of v is odd
+    }
+    cout << "Mean: " << men; // print out the found values
+    cout << "\nMedian: " << med << "\n";
 }
 int main() {
     ifstream inFile;
     vector<int> data, dataA, dataD;
-    readData(inFile, data);
-    copyVector(data, dataA);
-    copyVector(data, dataD);
-    sort(dataA.begin(), dataA.end());
-    for(int i = data.size(); i>0; i--) {
-        dataA.push_back(dataD[i]);
+    readData(inFile, data); // read the data to the vector
+    copyVector(data, dataA); // make a sortable copy fo the vector
+    // copyVector(data, dataD);
+    sort(dataA.begin(), dataA.end()); // sort the copies vector
+    for(int i = data.size()-1; i>=0; i--) { // reverse sort the other vector
+        dataD.push_back(dataA[i]);
     }
     int choice = -1;
-    while(choice != 5) {
+    while(choice != 5) { // menu loop
         printMenu();
         cin >> choice;
 
         switch (choice) {
-            case 1:
+            case 1: // print raw data
                 printData(data);
             break;
-            case 2:
+            case 2: // print ascended
                 printData(dataA);
             break;
-            case 3:
+            case 3: // print decscended
                 printData(dataD);
             break;
-            case 4:
+            case 4: // calculate and print the median and mean of the data
                 printMenMed(data);
             break;
             case 5:
-                exit(0);
+                exit(0); // quit the application
             default:
                 cout << "That is not a valid option.\n";
         }
