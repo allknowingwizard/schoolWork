@@ -1,0 +1,12 @@
+This data file comtains information from a few recent gasoline fillups 
+at Kwik Trip stores in the Winona area.  
+Data provided is:
+col 1: odometer readings, miles
+col 2: the number of gallons of gas I added to fill the tank
+col 3: date of fill, format is Year-Month-Date
+
+Notes: 
+1. Filling with 87 octane, 10% ethanol
+2. Car is a 2013 Toyota Prius 2
+
+Nathan Moore 2018-09-24
