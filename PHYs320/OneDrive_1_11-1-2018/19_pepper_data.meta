@@ -1,0 +1,20 @@
+2018-Oct-30
+Nathan Moore
+metadata for 19_pepper_data.csv
+
+This is data we took as a class in Physics 320.
+Each student drew a circle inside of a square.  The 
+circle and square had the same diameter.  
+Then, we sprinkled pepper (coarse ground) over the paper
+and counted:
+
+(first column) the number of pepper flakes within the circle
+
+(second column) the number of pepper flakes in the area between the circle and the square.
+
+14 lines of data
+
+The first few lines of the data file are:
+17,6,	
+79,11,	
+33,6,	
