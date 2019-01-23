@@ -1,0 +1,176 @@
+{
+ "cells": [
+  {
+   "cell_type": "code",
+   "execution_count": 6,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "import math\n",
+    "import numpy as np\n",
+    "import random\n"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 7,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def crystal(size):\n",
+    "    cry = np.zeros(size)\n",
+    "    for i in range(size):\n",
+    "        if random.random() > .5:\n",
+    "            cry[i] = 1;\n",
+    "        else:\n",
+    "            cry[i] = -1;\n",
+    "    return cry"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 10,
+   "metadata": {},
+   "outputs": [],
+   "source": [
+    "def energy(crystal):\n",
+    "    e = 0\n",
+    "    for i in range(len(crystal)-1):\n",
+    "        if (crystal[i]+crystal[i+1]) == 0:\n",
+    "            e -= 1\n",
+    "        else:\n",
+    "            e += 1\n",
+    "    return e"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 12,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "array([-1.,  1., -1.,  1.,  1.,  1.,  1., -1.])"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "-1"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "c = crystal(8)\n",
+    "display(c)\n",
+    "display(energy(c))"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": 51,
+   "metadata": {},
+   "outputs": [
+    {
+     "data": {
+      "text/plain": [
+       "6.26"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "100.53841255957845"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    },
+    {
+     "data": {
+      "text/plain": [
+       "array([ -35.,  -33.,   87.,   63.,  -81.,  133.,   25., -105.,   29.,\n",
+       "         53.,  107.,  163.,    9.,  117., -107.,   87., -129., -167.,\n",
+       "         -5.,  113.,  -15.,  -73.,   47.,    7.,  -85., -139., -251.,\n",
+       "        -19.,   -7.,  -49.,   81.,  -31.,  195., -173.,  111.,  -93.,\n",
+       "         11.,  123.,  -63.,  -49.,  209.,   79.,    1.,   75.,   15.,\n",
+       "         79.,  211.,   61.,   81., -239.,   49., -135.,  197.,   19.,\n",
+       "       -145.,  -47.,   95.,  113.,   -5.,  -71.,  157.,   41.,   29.,\n",
+       "       -127., -159.,  -63.,   39.,    5.,  -11.,  109.,  -99.,   89.,\n",
+       "         33.,   47.,  -91.,   71.,  127.,  105.,   41.,    7.,  -17.,\n",
+       "       -177.,   99.,  -79.,   33.,  -13.,   63.,  -19.,   27., -135.,\n",
+       "       -103.,   55., -171.,  -23.,   55.,  -63.,  131.,  193.,   -5.,\n",
+       "        -69.])"
+      ]
+     },
+     "metadata": {},
+     "output_type": "display_data"
+    }
+   ],
+   "source": [
+    "N = 100\n",
+    "averageEnergy = 0\n",
+    "crystalEnergies = np.zeros(N)\n",
+    "sigma = 0\n",
+    "\n",
+    "for i in range(N):\n",
+    "    c = crystal(10000)\n",
+    "    crystalEnergies[i] = energy(c)\n",
+    "    averageEnergy+=crystalEnergies[i]\n",
+    "averageEnergy /= N\n",
+    "display(averageEnergy)\n",
+    "for i in range(N):\n",
+    "    sigma += (crystalEnergies[i] - averageEnergy)**2\n",
+    "sigma /= N\n",
+    "sigma = sigma**(1/2)\n",
+    "display(sigma)\n",
+    "display(crystalEnergies)"
+   ]
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  },
+  {
+   "cell_type": "code",
+   "execution_count": null,
+   "metadata": {},
+   "outputs": [],
+   "source": []
+  }
+ ],
+ "metadata": {
+  "kernelspec": {
+   "display_name": "Python 3",
+   "language": "python",
+   "name": "python3"
+  },
+  "language_info": {
+   "codemirror_mode": {
+    "name": "ipython",
+    "version": 3
+   },
+   "file_extension": ".py",
+   "mimetype": "text/x-python",
+   "name": "python",
+   "nbconvert_exporter": "python",
+   "pygments_lexer": "ipython3",
+   "version": "3.6.5"
+  }
+ },
+ "nbformat": 4,
+ "nbformat_minor": 2
+}
