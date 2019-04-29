@@ -1,7 +1,7 @@
 use census;
 
 create table if not exists state(
-   state_name VARCHAR(40),
+   state_name VARCHAR(40) NOT NULL,
    PRIMARY KEY ( state_name )
 );
 
@@ -21,7 +21,7 @@ create table if not exists year(
 );
 
 create table if not exists state_measure(
-	state_name VARCHAR(40),
+	state_name VARCHAR(40) NOT NULL,
     population INT,
     year INT,
     number_of_reps INT,

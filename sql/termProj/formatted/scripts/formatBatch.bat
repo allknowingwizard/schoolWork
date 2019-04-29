@@ -1,0 +1,1 @@
+for %%v in (*.xls) do python formatter.py "%%v"
