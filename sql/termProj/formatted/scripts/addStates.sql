@@ -91,9 +91,9 @@ VALUE ('South Carolina');
 INSERT INTO state
 VALUE ('South Dakota'); 
 INSERT INTO state
-VALUE ('Tennesse'); 
+VALUE ('Tennessee'); 
 INSERT INTO state
-VALUE ('Taxas'); 
+VALUE ('Texas'); 
 INSERT INTO state
 VALUE ('Utah');
 INSERT INTO state
@@ -104,7 +104,7 @@ VALUE ('Virginia');
 INSERT INTO state
 VALUE ('Washington'); 
 INSERT INTO state
-VALUE ('West Verginia'); 
+VALUE ('West Virginia'); 
 INSERT INTO state
 VALUE ('Wisconsin'); 
 INSERT INTO state
