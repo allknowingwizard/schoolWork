@@ -1,4 +1,4 @@
-use Census;
+use Census2;
 
 INSERT INTO state
 VALUE ('Alabama'); 

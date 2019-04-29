@@ -1,4 +1,4 @@
-use census;
+use census2;
 
 INSERT INTO year
 VALUE ( 1790 );

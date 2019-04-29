@@ -1,4 +1,4 @@
-use census;
+use census2;
 
 create table if not exists state(
    state_name VARCHAR(40),
@@ -10,9 +10,9 @@ create table if not exists region(
     PRIMARY KEY (region_name)
 );
 
-create table if not exists city(
-	city_name VARCHAR(40) NOT NULL,
-    PRIMARY KEY (city_name)
+create table if not exists county(
+	county_name VARCHAR(40) NOT NULL,
+    PRIMARY KEY (county_name)
 );
 
 create table if not exists year(
@@ -29,14 +29,14 @@ create table if not exists state_measure(
     FOREIGN KEY (state_name) REFERENCES state(state_name),
     FOREIGN KEY (year) REFERENCES year(year)
 );
-create table if not exists city_measure(
+create table if not exists county_measure(
 	state_name VARCHAR(40) NOT NULL,
-    city_name VARCHAR(40) NOT NULL,
+    county_name VARCHAR(40) NOT NULL,
     population INT NOT NULL,
     year INT NOT NULL,
     PRIMARY KEY (state_name, city_name, year),
     FOREIGN KEY (state_name) REFERENCES state(state_name),
-    FOREIGN KEY (city_name) REFERENCES city(city_name),
+    FOREIGN KEY (county_name) REFERENCES county(county_name),
     FOREIGN KEY (year) REFERENCES year(year)
 );
 create table if not exists region_measure(
